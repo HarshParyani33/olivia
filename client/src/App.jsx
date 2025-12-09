@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// Import Layout for protected pages
-import Layout from './components/Layout'; 
+// Import Core Components
+import Layout from './components/Layout';
 import AccessGate from './pages/AccessGate';
 import LandingPage from './pages/LandingPage'; 
 import TheImpact from './pages/TheImpact'; 
-import Profile from './pages/Profile'; // 👈 NEW IMPORT
+import Profile from './pages/Profile'; 
+import Gallery from './pages/Gallery'; 
+import Timeline from './pages/Timeline'; // 👈 NEW IMPORT
 
-// A Private Route Wrapper now incorporating the Layout
+// A Private Route Wrapper now incorporating the Layout conditional logic
 const ProtectedRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem('protocolOliviaAuth') === 'true';
   
-  // If authenticated, wrap the requested element (page) in the Layout.
-  // If NOT authenticated, redirect to the login page.
-  return isAuthenticated ? (
-    <Layout>{element}</Layout> 
-  ) : (
-    <Navigate to="/" replace />
-  );
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (element.type.name === 'LandingPage') {
+    return element;
+  }
+  
+  return <Layout>{element}</Layout>; 
 };
 
 function App() {
@@ -45,14 +49,18 @@ function App() {
           }
         />
         
-        {/* 2. AUTHENTICATED ENTRY POINT: Landing Page */}
+        {/* 2. AUTHENTICATED ENTRY POINT: Cinematic Landing (No Header) */}
         <Route path="/home" element={<ProtectedRoute element={<LandingPage />} />} /> 
 
-        {/* 3. PROTECTED CONTENT ROUTES */}
+        {/* 3. PROTECTED CONTENT ROUTES (All wrapped in Layout with Header) */}
         <Route path="/episodes" element={<ProtectedRoute element={<TheImpact />} />} />
-        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} /> {/* 👈 NEW ROUTE */}
-        {/* Add the rest of your protected routes here... */}
-        {/* <Route path="/gallery" element={<ProtectedRoute element={<Gallery />} />} /> */}
+        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+        <Route path="/gallery" element={<ProtectedRoute element={<Gallery />} />} />
+        <Route path="/timeline" element={<ProtectedRoute element={<Timeline />} />} /> {/* 👈 NEW TIMELINE ROUTE */}
+        
+        {/* Placeholder routes... */}
+        {/* <Route path="/locker" element={<ProtectedRoute element={<Locker />} />} /> */}
+        {/* <Route path="/future" element={<ProtectedRoute element={<Future />} />} /> */}
         
       </Routes>
     </Router>
