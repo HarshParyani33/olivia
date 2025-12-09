@@ -27,32 +27,33 @@ function App() {
       <Routes>
         {/*
           1. ROOT PATH: Check Auth Status
-          If authenticated, navigate to the first main page /home (or /landing-page). 
-          If NOT authenticated, stay on the AccessGate.
+          IF AUTHENTICATED: Redirect to /home
+          IF NOT AUTHENTICATED: Show the AccessGate
         */}
         <Route
           path="/"
           element={
             isAuthenticated ? (
-              <Navigate to="/home" replace /> // Redirect to the main content
+              <Navigate to="/home" replace /> 
             ) : (
               <AccessGate setAuthenticated={setAuthenticated} />
             )
           }
         />
         
-        {/* 2. AUTHENTICATED ENTRY POINT: This is the first thing the user sees after login.
-        */}
-        <Route path="/home" element={<ProtectedRoute element={<AccessGate />} />} />
+        {/* 2. AUTHENTICATED ENTRY POINT: This is the first thing the user sees after login. */}
+        <Route path="/home" element={<ProtectedRoute element={<LandingPage />} />} /> {/* 👈 FIXED: Routes to LandingPage */}
 
         
-        {/* 3. PROTECTED ROUTES (The rest of the Sitemap)
-        */}
+        {/* 3. PROTECTED ROUTES */}
         <Route path="/episodes" element={<ProtectedRoute element={<TheImpact />} />} />
-        {/* <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} /> */}
-        {/* <Route path="/gallery" element={<ProtectedRoute element={<Gallery />} />} /> */}
-        {/* etc. */}
-        <Route path="/LoadingScreen" element={<ProtectedRoute element={<LoadingScreen />} />} />
+        
+        {/*
+          4. Note: I'm assuming you intended to use LoadingScreen as a part of LandingPage.
+          If you want it to be a separate page, we need to adjust LandingPage.jsx and the flow.
+          Given your files, LandingPage contains the LoadingScreen component, so this route is redundant.
+        */}
+        {/* <Route path="/LoadingScreen" element={<ProtectedRoute element={<LoadingScreen />} />} /> */}
 
       </Routes>
     </Router>
