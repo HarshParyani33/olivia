@@ -1,0 +1,191 @@
+import React from 'react';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
+// NOTE: For the Radar Chart, you would typically use a library like 
+// 'react-chartjs-2' or 'recharts'. Since we haven't added one, 
+// we will simulate the chart using pure CSS/SVG and styled components for now.
+
+// --- DATA SIMULATION ---
+const profileData = {
+  stageName: "Protocol Olivia",
+  era: "The Eternal Sophomore",
+  birthDate: "Sept 12",
+  position: "Vocalist, Visual, Main Character",
+  favoriteTrack: "Driver's License (Remix)",
+  photo: "/images/profile-hero.jpg", // Placeholder photo
+  stats: {
+    Cuteness: 85,
+    Sass: 95,
+    Dancing: 60,
+    Melodrama: 90,
+    Songwriting: 75,
+  },
+};
+
+// --- STYLED COMPONENTS ---
+
+const ProfileContainer = styled(motion.div)`
+  padding: 50px 0;
+  min-height: calc(100vh - 100px); /* Height minus Header padding */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 50px;
+`;
+
+const IdolCard = styled.div`
+  width: 350px;
+  background-color: #1e1e1e; /* Slightly lighter black for depth */
+  border: 2px solid var(--color-accent);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(255, 51, 102, 0.4);
+`;
+
+const ProfilePhoto = styled.div`
+  width: 100%;
+  height: 350px;
+  background: url(${props => props.$photo}) no-repeat center center;
+  background-size: cover;
+  border-bottom: 2px solid var(--color-accent);
+`;
+
+const InfoBox = styled.div`
+  padding: 25px;
+`;
+
+const Detail = styled.p`
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: var(--color-text);
+
+  strong {
+    color: var(--color-accent);
+    font-family: var(--font-primary);
+  }
+`;
+
+const Title = styled.h1`
+  font-family: var(--font-primary);
+  font-size: 2.5rem;
+  color: var(--color-accent);
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+// --- RADAR CHART (CSS Simulation for visual effect) ---
+
+const ChartTitle = styled.h2`
+  font-family: var(--font-primary);
+  font-size: 1.8rem;
+  color: var(--color-text);
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 51, 102, 0.3);
+  padding-bottom: 10px;
+`;
+
+const RadarChartWrapper = styled(motion.div)`
+  width: 400px;
+  height: 400px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+// This is a placeholder for the actual chart drawing
+const RadarPlaceholder = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* Use conic-gradient for the radar visual effect */
+  background: conic-gradient(
+    var(--color-accent) 0%,
+    var(--color-accent) 50%,
+    transparent 50%
+  );
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* --- REMOVE ROTATION: No longer needed for static text display --- */
+  /* animation: rotation 15s infinite linear; */ 
+`;
+
+const StatList = styled.ul`
+  list-style: none;
+  margin-top: 20px;
+  padding: 0;
+  width: 100%;
+  max-width: 300px;
+`;
+
+const StatItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dotted #333;
+
+  span {
+    color: var(--color-accent);
+    font-weight: bold;
+  }
+`;
+
+// --- REACT COMPONENT ---
+export default function Profile() {
+  return (
+    <ProfileContainer
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      
+      {/* K-Pop Idol Card */}
+      <IdolCard>
+        <ProfilePhoto $photo={profileData.photo} />
+        <InfoBox>
+          <Title>{profileData.stageName}</Title>
+          <Detail>
+            Stage Name: <strong>{profileData.stageName}</strong>
+          </Detail>
+          <Detail>
+            Current Era: <strong>{profileData.era}</strong>
+          </Detail>
+          <Detail>
+            Debut Date: <strong>{profileData.birthDate}</strong>
+          </Detail>
+          <Detail>
+            Position: <strong>{profileData.position}</strong>
+          </Detail>
+          <Detail>
+            Favorite Track: <strong>{profileData.favoriteTrack}</strong>
+          </Detail>
+        </InfoBox>
+      </IdolCard>
+
+      {/* Radar Chart and Stats */}
+      <RadarChartWrapper
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 100 }}
+      >
+        <ChartTitle>Main Character Stats</ChartTitle>
+        <RadarPlaceholder>
+            RADAR CHART GOES HERE
+            <StatList>
+                {Object.entries(profileData.stats).map(([key, value]) => (
+                    <StatItem key={key}>
+                        {key}: <span>{value}%</span>
+                    </StatItem>
+                ))}
+            </StatList>
+        </RadarPlaceholder>
+      </RadarChartWrapper>
+    </ProfileContainer>
+  );
+}

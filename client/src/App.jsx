@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// Import Pages (Update the Home import to LandingPage)
+// Import Layout for protected pages
+import Layout from './components/Layout'; 
 import AccessGate from './pages/AccessGate';
-import LandingPage from './pages/LandingPage'; // 👈 New Landing Page Component
+import LandingPage from './pages/LandingPage'; 
 import TheImpact from './pages/TheImpact'; 
-// import other pages later...
+import Profile from './pages/Profile'; // 👈 NEW IMPORT
 
-// A Private Route Wrapper to check authentication status
+// A Private Route Wrapper now incorporating the Layout
 const ProtectedRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem('protocolOliviaAuth') === 'true';
-  return isAuthenticated ? element : <Navigate to="/" replace />;
+  
+  // If authenticated, wrap the requested element (page) in the Layout.
+  // If NOT authenticated, redirect to the login page.
+  return isAuthenticated ? (
+    <Layout>{element}</Layout> 
+  ) : (
+    <Navigate to="/" replace />
+  );
 };
 
 function App() {
@@ -25,11 +33,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/*
-          1. ROOT PATH: Check Auth Status
-          IF AUTHENTICATED: Redirect to /home
-          IF NOT AUTHENTICATED: Show the AccessGate
-        */}
+        {/* 1. ROOT PATH: Handles access check */}
         <Route
           path="/"
           element={
@@ -41,20 +45,15 @@ function App() {
           }
         />
         
-        {/* 2. AUTHENTICATED ENTRY POINT: This is the first thing the user sees after login. */}
-        <Route path="/home" element={<ProtectedRoute element={<LandingPage />} />} /> {/* 👈 FIXED: Routes to LandingPage */}
+        {/* 2. AUTHENTICATED ENTRY POINT: Landing Page */}
+        <Route path="/home" element={<ProtectedRoute element={<LandingPage />} />} /> 
 
-        
-        {/* 3. PROTECTED ROUTES */}
+        {/* 3. PROTECTED CONTENT ROUTES */}
         <Route path="/episodes" element={<ProtectedRoute element={<TheImpact />} />} />
+        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} /> {/* 👈 NEW ROUTE */}
+        {/* Add the rest of your protected routes here... */}
+        {/* <Route path="/gallery" element={<ProtectedRoute element={<Gallery />} />} /> */}
         
-        {/*
-          4. Note: I'm assuming you intended to use LoadingScreen as a part of LandingPage.
-          If you want it to be a separate page, we need to adjust LandingPage.jsx and the flow.
-          Given your files, LandingPage contains the LoadingScreen component, so this route is redundant.
-        */}
-        {/* <Route path="/LoadingScreen" element={<ProtectedRoute element={<LoadingScreen />} />} /> */}
-
       </Routes>
     </Router>
   );
