@@ -1,16 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // 👈 Import useEffect
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 
-// --- KEYFRAMES ---
+// --- KEYFRAMES (Keeping these for visual flair) ---
 const blink = keyframes`
   0%, 100% { opacity: 1; }
   50% { opacity: 0.2; }
-`;
-
-const explode = keyframes`
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(5); opacity: 0; }
 `;
 
 // --- STYLED COMPONENTS ---
@@ -47,37 +42,44 @@ const Explosion = styled(motion.div)`
 `;
 
 
-// --- REACT COMPONENT ---
+// --- REACT COMPONENT (Simplified Logic) ---
 export default function LoadingScreen({ onComplete }) {
-  // Use Framer Motion's 'animate' prop for the loading sequence
-  const loadingSequence = async (controls) => {
-    // 1. Display text for a duration
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    // 2. Explode the center point
-    controls.start({
-      scale: 5,
-      opacity: 0,
-      transition: { duration: 0.5, ease: 'easeOut' }
-    });
-    
-    // 3. Complete the loading state
-    await new Promise(resolve => setTimeout(resolve, 500));
-    onComplete();
-  };
+  
+  // Total animation time (e.g., 3.5 seconds)
+  const TOTAL_DURATION = 3500; 
+
+  useEffect(() => {
+    // Automatically call onComplete after the duration passes
+    const timer = setTimeout(onComplete, TOTAL_DURATION); 
+
+    // Cleanup function
+    return () => clearTimeout(timer);
+  }, [onComplete]);
 
   return (
     <LoadingWrapper
       initial={{ opacity: 1 }}
-      animate={{ opacity: 1 }} // Keep wrapper opaque until explosion
-      onAnimationStart={loadingSequence}
+      // Use Framer Motion to fade out the entire screen
+      animate={{ opacity: 0 }}
+      transition={{ delay: 3, duration: 0.5 }} // Delay 3s, then fade for 0.5s
     >
       <Text>
         // LOADING MAIN CHARACTER //
       </Text>
+      {/* The Explosion is now animated purely via props.
+        It starts small, waits for 3s (delay), then scales up and fades out quickly.
+      */}
       <Explosion 
         initial={{ scale: 0, opacity: 1 }}
-        animate={{ scale: 0, opacity: 1 }} // Placeholder to control explosion later
+        animate={{ 
+            scale: 5, 
+            opacity: 0,
+        }} 
+        transition={{ 
+            delay: 3, 
+            duration: 0.5, 
+            ease: 'easeOut' 
+        }} 
       />
     </LoadingWrapper>
   );
