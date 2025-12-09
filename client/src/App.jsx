@@ -43,14 +43,16 @@ function App() {
         
         {/* 2. AUTHENTICATED ENTRY POINT: This is the first thing the user sees after login.
         */}
-        <Route path="/home" element={<ProtectedRoute element={<LandingPage />} />} />
+        <Route path="/home" element={<ProtectedRoute element={<AccessGate />} />} />
 
+        
         {/* 3. PROTECTED ROUTES (The rest of the Sitemap)
         */}
         <Route path="/episodes" element={<ProtectedRoute element={<TheImpact />} />} />
         {/* <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} /> */}
         {/* <Route path="/gallery" element={<ProtectedRoute element={<Gallery />} />} /> */}
         {/* etc. */}
+        <Route path="/LoadingScreen" element={<ProtectedRoute element={<LoadingScreen />} />} />
 
       </Routes>
     </Router>
