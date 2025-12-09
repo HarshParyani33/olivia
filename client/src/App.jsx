@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react'; // Removed useEffect since AccessGate is handling local storage check
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Import Pages
 import AccessGate from './pages/AccessGate';
 import Home from './pages/Home';
-// import TheImpact from './pages/TheImpact'; // Will create these later
+import TheImpact from './pages/TheImpact'; // Import the new placeholder page
 
 // A Private Route Wrapper to check authentication status
 const ProtectedRoute = ({ element }) => {
@@ -13,12 +13,10 @@ const ProtectedRoute = ({ element }) => {
 };
 
 function App() {
-  // Use state to track current authentication status (for immediate UI update)
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem('protocolOliviaAuth') === 'true'
   );
 
-  // Function to pass to AccessGate to update auth status
   const setAuthenticated = (status) => {
     setIsAuthenticated(status);
   };
@@ -26,10 +24,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/*
-          If authenticated, root path shows Home.
-          If NOT authenticated, root path shows AccessGate.
-        */}
         <Route
           path="/"
           element={
@@ -40,12 +34,18 @@ function App() {
             )
           }
         />
-        {/*
-          Example of other protected routes, which will always redirect to '/' 
-          (which then renders AccessGate) if not authenticated.
-        */}
-        {/* <Route path="/episodes" element={<ProtectedRoute element={<TheImpact />} />} /> */}
-        {/* Add all other routes here: /profile, /gallery, etc. */}
+        
+        {/* Protected Routes */}
+        <Route path="/episodes" element={<ProtectedRoute element={<TheImpact />} />} />
+        {/* Add placeholders for other routes as we build them: */}
+        {/* <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} /> */}
+        {/* <Route path="/gallery" element={<ProtectedRoute element={<Gallery />} />} /> */}
+        {/* <Route path="/timeline" element={<ProtectedRoute element={<Timeline />} />} /> */}
+        {/* <Route path="/locker" element={<ProtectedRoute element={<Locker />} />} /> */}
+        {/* <Route path="/future" element={<ProtectedRoute element={<Future />} />} /> */}
+        {/* <Route path="/guestbook" element={<ProtectedRoute element={<Guestbook />} />} /> */}
+        {/* <Route path="/style" element={<ProtectedRoute element={<Style />} />} /> */}
+
       </Routes>
     </Router>
   );
