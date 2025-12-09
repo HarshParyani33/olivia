@@ -1,10 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 
 // NOTE: For the Radar Chart, you would typically use a library like 
-// 'react-chartjs-2' or 'recharts'. Since we haven't added one, 
-// we will simulate the chart using pure CSS/SVG and styled components for now.
+// 'react-chartjs-2' or 'recharts'. We are simulating the visual.
 
 // --- DATA SIMULATION ---
 const profileData = {
@@ -27,7 +26,7 @@ const profileData = {
 
 const ProfileContainer = styled(motion.div)`
   padding: 50px 0;
-  min-height: calc(100vh - 100px); /* Height minus Header padding */
+  min-height: calc(100vh - 100px); 
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -74,8 +73,7 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-// --- RADAR CHART (CSS Simulation for visual effect) ---
-
+/* --- RADAR CHART COMPONENTS --- */
 const ChartTitle = styled.h2`
   font-family: var(--font-primary);
   font-size: 1.8rem;
@@ -83,6 +81,8 @@ const ChartTitle = styled.h2`
   margin-bottom: 20px;
   border-bottom: 1px solid rgba(255, 51, 102, 0.3);
   padding-bottom: 10px;
+  width: 100%;
+  text-align: center;
 `;
 
 const RadarChartWrapper = styled(motion.div)`
@@ -93,14 +93,14 @@ const RadarChartWrapper = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative; /* 👈 Anchor for StatsOverlay */
 `;
 
-// This is a placeholder for the actual chart drawing
 const RadarPlaceholder = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  /* Use conic-gradient for the radar visual effect */
+  /* Creates the pink fill effect */
   background: conic-gradient(
     var(--color-accent) 0%,
     var(--color-accent) 50%,
@@ -108,26 +108,38 @@ const RadarPlaceholder = styled.div`
   );
   border: 1px dashed rgba(255, 255, 255, 0.3);
   
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  /* --- REMOVE ROTATION: No longer needed for static text display --- */
-  /* animation: rotation 15s infinite linear; */ 
+  /* Removed rotation animation to fix illegibility */
+`;
+
+const StatsOverlay = styled.div`
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Allows mouse events to pass through */
 `;
 
 const StatList = styled.ul`
   list-style: none;
-  margin-top: 20px;
   padding: 0;
-  width: 100%;
-  max-width: 300px;
+  width: 250px; /* Constrain list width for clarity */
+  background: rgba(18, 18, 18, 0.8); /* Semi-transparent background for readability */
+  padding: 15px;
+  border-radius: 8px;
+  pointer-events: all; /* Restore pointer events for the list items */
 `;
 
 const StatItem = styled.li`
   display: flex;
   justify-content: space-between;
   padding: 5px 0;
+  font-family: var(--font-secondary); /* Use secondary font for unique style */
+  font-size: 1.1rem;
   border-bottom: 1px dotted #333;
 
   span {
@@ -175,8 +187,12 @@ export default function Profile() {
         transition={{ delay: 0.3, type: "spring", stiffness: 100 }}
       >
         <ChartTitle>Main Character Stats</ChartTitle>
-        <RadarPlaceholder>
-            RADAR CHART GOES HERE
+        
+        {/* The visual effect, no rotation */}
+        <RadarPlaceholder /> 
+        
+        {/* The readable stats list on top */}
+        <StatsOverlay>
             <StatList>
                 {Object.entries(profileData.stats).map(([key, value]) => (
                     <StatItem key={key}>
@@ -184,7 +200,8 @@ export default function Profile() {
                     </StatItem>
                 ))}
             </StatList>
-        </RadarPlaceholder>
+        </StatsOverlay>
+
       </RadarChartWrapper>
     </ProfileContainer>
   );

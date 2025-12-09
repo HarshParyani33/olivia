@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import Header from './Header'; // Import the Header component
+import Header from './Header'; // Assuming Header.jsx is in the same directory
 
 // --- STYLED COMPONENTS ---
 const MainContent = styled(motion.main)`
@@ -11,7 +11,7 @@ const MainContent = styled(motion.main)`
   background-color: var(--color-background);
   color: var(--color-text);
   
-  /* Use padding for content safety, similar to Netflix's main scrolling area */
+  /* Apply side padding for content safety */
   padding-left: 50px;
   padding-right: 50px;
 
@@ -32,7 +32,6 @@ export default function Layout({ children }) {
       >
         {children}
       </MainContent>
-      {/* Footer can go here later */}
     </>
   );
 }
