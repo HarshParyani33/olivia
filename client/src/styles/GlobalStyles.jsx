@@ -45,6 +45,31 @@ const GlobalStyles = createGlobalStyle`
       text-decoration: underline;
     }
   }
+    @media (max-width: 768px) {
+    /* Reduce padding and font sizes globally on smaller screens */
+    #root {
+      padding: 0 15px;
+    }
+    
+    body {
+      font-size: 14px;
+    }
+
+    /* Reduce default large titles */
+    h1 {
+      font-size: 2.5rem !important; /* !important used sparingly to override component styles */
+    }
+    h2 {
+      font-size: 1.8rem !important;
+    }
+  }
+
+  /* Media query for small phones */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2rem !important;
+    }
+  }
 `;
 
 export default GlobalStyles;

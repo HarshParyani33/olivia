@@ -30,6 +30,12 @@ const NavWrapper = styled(motion.header)`
   /* Dark translucent background for Netflix look */
   background: rgba(18, 18, 18, 0.8); 
   backdrop-filter: blur(5px);
+
+  @media (max-width: 768px) {
+    padding: 15px 20px;
+    flex-direction: column; /* Stack logo and links */
+    height: auto; /* Allow height to expand */
+  }
 `;
 
 const Logo = styled(Link)`
@@ -44,6 +50,13 @@ const Logo = styled(Link)`
 const NavLinks = styled.nav`
   display: flex;
   gap: 25px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    gap: 10px;
+    justify-content: space-around; /* Distribute links evenly */
+    margin-top: 10px;
+  }
 `;
 
 const NavItem = styled(Link)`

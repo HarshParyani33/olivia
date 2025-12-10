@@ -31,6 +31,12 @@ const ProfileContainer = styled(motion.div)`
   justify-content: center;
   align-items: flex-start;
   gap: 50px;
+
+  @media (max-width: 1024px) {
+    flex-direction: column; /* Stack content vertically */
+    align-items: center;
+    gap: 30px;
+  }
 `;
 
 const IdolCard = styled.div`
@@ -40,6 +46,10 @@ const IdolCard = styled.div`
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 0 30px rgba(255, 51, 102, 0.4);
+
+  @media (max-width: 480px) {
+    width: 90vw; /* Take up 90% of viewport width */
+  }
 `;
 
 const ProfilePhoto = styled.div`
