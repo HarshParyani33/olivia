@@ -25,6 +25,13 @@ mongoose.connect(process.env.MONGODB_URI)
 // --- API Routes (will be added later) ---
 // const guestbookRoutes = require('./src/routes/guestbook');
 // app.use('/api/guestbook', guestbookRoutes);
+app.get('/', (req, res) => {
+  res.send('Protocol Olivia API is running!');
+});
+
+// --- API Routes (will be added later) ---
+const guestbookRoutes = require('./src/routes/guestbook'); // 👈 NEW LINE
+app.use('/api/guestbook', guestbookRoutes);
 
 
 // Start the server
