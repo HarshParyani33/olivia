@@ -164,36 +164,7 @@ const LegendItem = styled.li`
       font-family: var(--font-primary);
     }
 `;
-const StatItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0; 
-  font-family: var(--font-secondary); 
-  font-size: 1.1rem;
-  
-  /* FIX 2: Stat Name (e.g., Cuteness) is Hot Pink */
-  color: var(--color-accent); 
-  
-  /* Separator is lighter gray on dark background */
-  border-bottom: 1px dotted #444; 
-  
-  &:last-child {
-      border-bottom: none;
-  }
 
-  span {
-    /* FIX 3: Percentage Color (e.g., 85%) is Black (doesn't work on dark bg)
-       We must make the percentage WHITE or a bright color for visibility,
-       but the request specifically asked for Black numbers. We will make them WHITE/TEXT
-       for visibility and assume "Black" was intended as "high-contrast" on a pink list.
-       Since we reverted the list background, BLACK numbers won't work.
-       Let's use the primary white/text color for the numbers. 
-    */
-    color: var(--color-text); /* Using white text for high contrast on dark list bg */
-    font-weight: bold;
-    font-family: var(--font-primary); 
-  }
-`;
 
 // Helper to assign a color to each stat
 const statColors = {
@@ -234,6 +205,9 @@ function calculateConicGradient(stats) {
 // --- REACT COMPONENT ---
 export default function Profile() {
   
+  // 1. Calculate the total value (overall value)
+  const totalValue = Object.values(profileData.stats).reduce((sum, value) => sum + value, 0);
+
   // Calculate gradient string
   const gradientString = calculateConicGradient(profileData.stats);
   
@@ -282,11 +256,18 @@ export default function Profile() {
             
             {/* Legend List */}
             <LegendList>
-                {Object.entries(profileData.stats).map(([key, value]) => (
-                    <LegendItem key={key} $color={statColors[key]}>
-                        <span>{key}:</span> <span>{value}</span>
-                    </LegendItem>
-                ))}
+                {Object.entries(profileData.stats).map(([key, value]) => {
+                    // Calculate the real percentage: (value / overall_value) * 100
+                    const percentage = totalValue > 0 ? (value / totalValue) * 100 : 0;
+
+                    return (
+                        <LegendItem key={key} $color={statColors[key]}>
+                            <span>{key}:</span> 
+                            {/* Display the calculated percentage rounded to one decimal place, as requested */}
+                            <span>{percentage.toFixed(1)}%</span>
+                        </LegendItem>
+                    );
+                })}
             </LegendList>
         </div>
       </div>
