@@ -11,6 +11,8 @@ import Gallery from './pages/Gallery';
 import Timeline from './pages/Timeline';
 import Locker from './pages/Locker'; 
 import Future from './pages/Future';
+import Guestbook from './pages/Guestbook';
+import Style from './pages/Style';
 
 // A Private Route Wrapper that applies Layout conditionally
 const ProtectedRoute = ({ element }) => {
@@ -64,10 +66,8 @@ function App() {
         <Route path="/timeline" element={<ProtectedRoute element={<Timeline />} />} />
         <Route path="/locker" element={<ProtectedRoute element={<Locker />} />} /> {/* 👈 LOCKER ROUTE ADDED */}
         <Route path="/future" element={<ProtectedRoute element={<Future />} />} />
-        {/* Placeholder routes for remaining pages */}
-        {/* <Route path="/future" element={<ProtectedRoute element={<Future />} />} /> */}
-        {/* <Route path="/guestbook" element={<ProtectedRoute element={<Guestbook />} />} /> */}
-        {/* <Route path="/style" element={<ProtectedRoute element={<Style />} />} /> */}
+        <Route path="/guestbook" element={<ProtectedRoute element={<Guestbook />} />} />
+        <Route path="/style" element={<ProtectedRoute element={<Style />} />} />
         
       </Routes>
     </Router>

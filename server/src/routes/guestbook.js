@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const GuestbookEntry = require('../models/guestbook.js');
+const GuestbookEntry = require('../models/Guestbook.js');
 
 // @route   GET /api/guestbook
 // @desc    Get all guestbook entries (Read)
