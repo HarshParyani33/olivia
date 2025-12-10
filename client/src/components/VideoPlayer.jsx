@@ -7,16 +7,16 @@ import { motion } from 'framer-motion';
 // This component expects a full Cloudinary URL or embed path.
 // Cloudinary links typically look like: https://res.cloudinary.com/[cloud_name]/video/upload/...
 const VideoFrame = styled(motion.video)`
+  /* Base style: ensure element is flexible */
   width: 100%;
-  max-width: 900px; /* Max width for cinematic viewing */
   height: auto;
-  border: 3px solid var(--color-accent);
-  box-shadow: 0 0 20px rgba(255, 51, 102, 0.7);
-  border-radius: 8px;
   background-color: black;
+  
+  /* Removed hardcoded sizing/borders to allow the parent styled component
+     to fully control the look and turn it into a full-screen background. */
 `;
 
-export default function VideoPlayer({ src, title, controls = true, loop = false, autoPlay = false, muted = false }) {
+export default function VideoPlayer({ src, title, controls = true, loop = false, autoPlay = false, muted = false, ...props }) {
   return (
     <VideoFrame
         title={title}
@@ -27,6 +27,7 @@ export default function VideoPlayer({ src, title, controls = true, loop = false,
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
+        {...props} /* Pass through styled component's class/styles */
     >
       <source src={src} type="video/mp4" />
       Your browser does not support the video tag.

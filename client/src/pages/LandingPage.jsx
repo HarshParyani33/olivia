@@ -7,20 +7,55 @@ import { useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import VideoPlayer from '../components/VideoPlayer';
 
-// --- STYLED COMPONENTS (Keep the Hero styles) ---
+// --- STYLED COMPONENTS ---
+
+// NEW: Styled component for background video functionality
+const BackgroundVideoPlayer = styled(VideoPlayer)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* CRUCIAL: Ensures video covers the entire container */
+  z-index: 1; /* Behind content box (z-index 10) and gradient overlay (z-index 5) */
+  /* Ensure no residual styles leak through */
+  max-width: none; 
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  opacity: 0.8; /* Dim the video slightly */
+`;
+
+
 const HeroContainer = styled(motion.div)`
   min-height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Push content to the bottom-left */
   padding: 50px 50px 100px;
   position: relative;
-  background: 
-    linear-gradient(to bottom, transparent 30%, var(--color-background) 100%),
-    url('/images/hero-photo.jpg') no-repeat center center;
-  background-size: cover;
-  background-position: center top; 
+  
+  /* MODIFIED: Removed static image background and set base color */
+  background-color: var(--color-background); 
+  
+  /* ADDED: Dark gradient overlay for text readability, similar to Netflix */
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Strong black gradient from bottom up, fading out slightly */
+    background: linear-gradient(
+        to bottom, 
+        rgba(18, 18, 18, 0.1) 0%, 
+        rgba(18, 18, 18, 0.7) 70%, 
+        rgba(18, 18, 18, 1) 100%
+    );
+    z-index: 5; /* Above video (z-index 1) but below content (z-index 10) */
+  }
 `;
 
 const ContentBox = styled(motion.div)`
@@ -86,7 +121,8 @@ export default function LandingPage() {
     },
   };
 
-  const TRAILER_URL = "YOUR_CLOUDINARY_TRAILER_URL_HERE";
+  // WARNING: This link must be the direct MP4/WebM URL from Cloudinary, not the /embed/ link.
+  const TRAILER_URL = "";
 
   return (
     <>
@@ -100,6 +136,16 @@ export default function LandingPage() {
           animate="visible"
           variants={contentVariants}
         >
+          {/* ADDED: Render the Video Player in the background */}
+          <BackgroundVideoPlayer
+              src={TRAILER_URL}
+              title="Birthday Trailer"
+              controls={false} /* Hidden controls for cinematic look */
+              loop={true}
+              autoPlay={true}
+              muted={false} /* REQUESTED: No mute, but risks blocking autoplay */
+          />
+
           <ContentBox variants={contentVariants}>
             <HeroTitle variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
               The Era of [Smriti]

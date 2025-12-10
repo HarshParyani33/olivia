@@ -12,7 +12,6 @@ const navLinks = [
   { to: '/profile', label: 'Her Era' },
   { to: '/gallery', label: 'Sour & Sweet' },
   { to: '/timeline', label: 'Discography' },
-  { to: '/locker', label: 'Vanity' },
   { to: '/future', label: 'Season 2' },
   { to: '/guestbook', label: 'Fan Mail' },
   { to: '/style', label: 'Vogue' },
