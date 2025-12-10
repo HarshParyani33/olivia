@@ -4,7 +4,6 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* Use a slightly different cursor when OGL is active */
   cursor: grab;
 }
 

@@ -1,9 +1,7 @@
-// client/src/components/CircularGallery.jsx
-
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
 import { useEffect, useRef } from 'react';
 
-import './CircularGallery.css'; // Import the CSS
+import './CircularGallery.css';
 
 // --- Utility Functions ---
 
@@ -51,10 +49,10 @@ function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'blac
 // --- Title Class ---
 
 class Title {
-  constructor({ gl, plane, renderer, text, textColor = '#545050', font = '30px sans-serif' }) {
+  constructor({ gl, card, renderer, text, textColor = '#545050', font = '30px sans-serif' }) {
     autoBind(this);
     this.gl = gl;
-    this.plane = plane;
+    this.card = card;
     this.renderer = renderer;
     this.text = text;
     this.textColor = textColor;
@@ -91,15 +89,22 @@ class Title {
     });
     this.mesh = new Mesh(this.gl, { geometry, program });
     const aspect = width / height;
-    const textHeight = this.plane.scale.y * 0.2; // Adjusted size for Polaroid
+
+    const textHeight = this.card.scale.y * 0.15; 
     const textWidth = textHeight * aspect;
     this.mesh.scale.set(textWidth, textHeight, 1);
-    this.mesh.position.y = -this.plane.scale.y * 0.5 - textHeight * 0.5 - 0.05; // Position below image
-    this.mesh.setParent(this.plane);
+    
+    this.mesh.position.y = -this.card.scale.y * 0.5 + textHeight * 0.5 + 0.05; 
+    this.mesh.setParent(this.card);
+  }
+  destroy() {
+    if (this.mesh && this.mesh.parent) {
+      this.mesh.setParent(null);
+    }
   }
 }
 
-// --- Media Class (Modified for Multi-Row Contra-Scrolling) ---
+// --- Media Class (Refactored for Polaroid Frame) ---
 
 class Media {
   constructor({
@@ -137,14 +142,17 @@ class Media {
     this.font = font;
     this.row = row; 
     this.rows = rows; 
-    // Determine scroll direction: 1 for even rows (0, 2, 4...), -1 for odd rows (1, 3, 5...)
     this.scrollDirection = this.row % 2 === 0 ? 1 : -1; 
+
+    this.imageScaleY = 0.833; 
+    this.imageScaleX = 0.92;  
+    this.CARD_ASPECT = 0.833; 
 
     this.createShader();
     this.createMesh();
-    this.createTitle();
-    this.onResize();
+    this.onResize(); 
   }
+  
   createShader() {
     const texture = new Texture(this.gl, {
       generateMipmaps: true
@@ -164,7 +172,7 @@ class Media {
         void main() {
           vUv = uv;
           vec3 p = position;
-          p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5) * (0.1 + uSpeed * 0.5);
+          p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5) * (0.1 + uSpeed * 0.5); 
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
       `,
@@ -194,7 +202,6 @@ class Media {
           
           float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
           
-          // Smooth antialiasing for edges
           float edgeSmooth = 0.002;
           float alpha = 1.0 - smoothstep(-edgeSmooth, edgeSmooth, d);
           
@@ -219,37 +226,61 @@ class Media {
       this.program.uniforms.uImageSizes.value = [img.naturalWidth, img.naturalHeight];
     };
   }
+  
   createMesh() {
-    this.plane = new Mesh(this.gl, {
+    this.card = new Transform();
+    this.card.setParent(this.scene);
+
+    const frameProgram = new Program(this.gl, {
+        depthTest: false,
+        depthWrite: false,
+        vertex: this.program.vertex, 
+        fragment: `
+            precision highp float;
+            void main() {
+                gl_FragColor = vec4(0.94, 0.94, 0.94, 1.0); // #f0f0f0 (Polaroid White)
+            }
+        `,
+    });
+    this.frameMesh =  new Mesh(this.gl, { // Corrected: removed extra 'new'
+      geometry: this.geometry,
+      program: frameProgram
+    });
+    this.frameMesh.setParent(this.card);
+    
+    this.imagePlane = new Mesh(this.gl, {
       geometry: this.geometry,
       program: this.program
     });
-    this.plane.setParent(this.scene);
-  }
-  createTitle() {
+    this.imagePlane.setParent(this.card);
+    
+    this.imagePlane.scale.set(this.imageScaleX, this.imageScaleY, 1);
+    
+    // Position the image up to create the larger bottom border
+    const totalPaddingRatio = 1 - this.imageScaleY; 
+    this.imagePlane.position.y = (totalPaddingRatio * (40 / (10 + 40))) - (totalPaddingRatio * (10 / (10 + 40)));
+
     this.title = new Title({
       gl: this.gl,
-      plane: this.plane,
+      card: this.card, 
       renderer: this.renderer,
       text: this.text,
       textColor: this.textColor,
-      fontFamily: this.font
+      fontFamily: this.font 
     });
   }
 
   update(scroll, direction) {
-    // Contra-scrolling: apply the scroll in the determined direction
     const actualScroll = scroll.current * this.scrollDirection; 
     
-    this.plane.position.x = this.x - actualScroll - this.extra;
+    this.card.position.x = this.x - actualScroll - this.extra;
 
-    const x = this.plane.position.x;
+    const x = this.card.position.x;
     const H = this.viewport.width / 2;
 
-    // --- Circular Bend Logic ---
     if (this.bend === 0) {
-      this.plane.position.y = this.y;
-      this.plane.rotation.z = 0;
+      this.card.position.y = this.y; 
+      this.card.rotation.z = 0; 
     } else {
       const B_abs = Math.abs(this.bend);
       const R = (H * H + B_abs * B_abs) / (2 * B_abs);
@@ -257,25 +288,23 @@ class Media {
 
       const arc = R - Math.sqrt(R * R - effectiveX * effectiveX);
       if (this.bend > 0) {
-        this.plane.position.y = -arc + this.y; 
-        this.plane.rotation.z = -Math.sign(x) * Math.asin(effectiveX / R); 
+        this.card.position.y = -arc + this.y; 
+        this.card.rotation.z = -Math.sign(x) * Math.asin(effectiveX / R); 
       } else {
-        this.plane.position.y = arc + this.y; 
-        this.plane.rotation.z = Math.sign(x) * Math.asin(effectiveX / R);
+        this.card.position.y = arc + this.y; 
+        this.card.rotation.z = Math.sign(x) * Math.asin(effectiveX / R); 
       }
     }
 
-    // --- Wave and Speed Effect ---
     this.speed = Math.abs(scroll.current - scroll.last); 
     this.program.uniforms.uTime.value += 0.04;
     this.program.uniforms.uSpeed.value = this.speed * 0.25;
 
-    // --- Wrapping Logic (adjusted for scroll direction) ---
-    const planeOffset = this.plane.scale.x / 2;
+    const cardOffset = this.card.scale.x / 2;
     const viewportOffset = this.viewport.width / 2;
     
-    this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
-    this.isAfter = this.plane.position.x - planeOffset > viewportOffset;
+    this.isBefore = this.card.position.x + cardOffset < -viewportOffset;
+    this.isAfter = this.card.position.x - cardOffset > viewportOffset;
     
     if (this.scrollDirection === 1) { 
         if (direction === 'right' && this.isBefore) {
@@ -286,7 +315,7 @@ class Media {
             this.extra += this.widthTotal;
             this.isBefore = this.isAfter = false;
         }
-    } else { // Contra-scrolling row wraps in the opposite condition
+    } else { 
         if (direction === 'right' && this.isAfter) {
             this.extra += this.widthTotal;
             this.isBefore = this.isAfter = false;
@@ -302,37 +331,40 @@ class Media {
     if (screen) this.screen = screen;
     if (viewport) {
       this.viewport = viewport;
-      if (this.plane.program.uniforms.uViewportSizes) {
-        this.plane.program.uniforms.uViewportSizes.value = [this.viewport.width, this.viewport.height];
+      if (this.imagePlane.program.uniforms.uViewportSizes) {
+        this.imagePlane.program.uniforms.uViewportSizes.value = [this.viewport.width, this.viewport.height];
       }
     }
     
     this.scale = this.screen.height / 1500;
     
-    // Scale for Polaroid aspect ratio and multi-row layout
-    const mediaHeightScale = 1100 * this.scale; 
-    const mediaWidthScale = 700 * this.scale;
+    const CARD_HEIGHT_FACTOR = 1000 * this.scale; 
+    const CARD_WIDTH_FACTOR = CARD_HEIGHT_FACTOR * this.CARD_ASPECT;
     
-    // Divide plane scale by number of rows
-    this.plane.scale.y = (this.viewport.height * mediaHeightScale) / this.screen.height / this.rows;
-    this.plane.scale.x = (this.viewport.width * mediaWidthScale) / this.screen.width / this.rows;
+    this.card.scale.y = (this.viewport.height * CARD_HEIGHT_FACTOR) / this.screen.height / this.rows;
+    this.card.scale.x = (this.viewport.width * CARD_WIDTH_FACTOR) / this.screen.width / this.rows;
     
-    this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
-    
+    this.imagePlane.program.uniforms.uPlaneSizes.value = [
+        this.card.scale.x * this.imageScaleX, 
+        this.card.scale.y * this.imageScaleY
+    ];
+
     this.padding = 1.5; 
-    this.width = this.plane.scale.x + this.padding;
+    this.width = this.card.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
-    
-    // Horizontal position
     this.x = this.width * this.index; 
     
-    // Vertical position (Centers the block of rows)
-    const totalRowHeight = this.plane.scale.y + this.padding;
+    const totalRowHeight = this.card.scale.y + this.padding;
     this.y = totalRowHeight * (this.row - (this.rows - 1) / 2); 
+    
+    if (this.title) {
+      this.title.destroy();
+      this.title.createMesh();
+    }
   }
 }
 
-// --- App Class ---
+// --- App Class (Bug fixes applied here) ---
 
 class App {
   constructor(
@@ -340,8 +372,8 @@ class App {
     {
       items,
       bend,
-      textColor = '#ffffff',
-      borderRadius = 0,
+      textColor = '#545050',
+      borderRadius = 0.05,
       font = 'bold 30px Figtree',
       scrollSpeed = 2,
       scrollEase = 0.05,
@@ -354,6 +386,7 @@ class App {
     this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
     this.onCheckDebounce = debounce(this.onCheck, 200);
     this.rows = rows; 
+    this.medias = []; // ✅ FIX 1: Initialize the array to prevent 'reading forEach of undefined'
     this.createRenderer();
     this.createCamera();
     this.createScene();
@@ -396,10 +429,8 @@ class App {
     ];
     const galleryItems = items && items.length ? items : defaultItems;
     
-    // Duplicating the array items multiple times for seamless wrapping
     const totalItems = galleryItems.length;
     this.mediasImages = [];
-    // We duplicate the base array twice *per row* for a reliable loop/wrap effect
     for (let r = 0; r < this.rows; r++) {
         for (let i = 0; i < totalItems * 2; i++) { 
             this.mediasImages.push({
@@ -410,7 +441,6 @@ class App {
         }
     }
 
-    // Creating Media instances
     this.medias = this.mediasImages.map((data, index) => {
       return new Media({
         geometry: this.planeGeometry,
@@ -472,14 +502,14 @@ class App {
     const height = 2 * Math.tan(fov / 2) * this.camera.position.z;
     const width = height * this.camera.aspect;
     this.viewport = { width, height };
-    if (this.medias) {
+    if (this.medias && this.medias.length > 0) { // ✅ FIX 1: Safer check in onResize
       this.medias.forEach(media => media.onResize({ screen: this.screen, viewport: this.viewport }));
     }
   }
   update() {
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
-    if (this.medias) {
+    if (this.medias && this.medias.length > 0) { // ✅ FIX 1: Safer check in update
       this.medias.forEach(media => media.update(this.scroll, direction));
     }
     this.renderer.render({ scene: this.scene, camera: this.camera });
@@ -522,7 +552,7 @@ class App {
 export default function CircularGallery({
   items,
   bend = 3,
-  textColor = '#ffffff',
+  textColor = '#545050',
   borderRadius = 0.05,
   font = 'bold 30px Figtree',
   scrollSpeed = 2,

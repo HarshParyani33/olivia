@@ -64,16 +64,9 @@ const NavLinks = styled.nav`
   }
 `;
 
-const NavItem = styled(Link)`
+const NavItem = styled(motion(Link))` 
   font-family: var(--font-primary);
   font-size: 1.1rem;
-  
-  /* MOBILE: Smaller font size for links */
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-    padding: 2px 5px;
-  }
-  
   font-weight: ${({ $isActive }) => ($isActive ? 'bold' : 'normal')};
   color: ${({ $isActive }) => ($isActive ? 'var(--color-accent)' : 'var(--color-text)')};
   opacity: ${({ $isActive }) => ($isActive ? 1 : 0.7)};
