@@ -2,9 +2,6 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 
-// NOTE: For the Radar Chart, you would typically use a library like 
-// 'react-chartjs-2' or 'recharts'. We are simulating the visual.
-
 // --- DATA SIMULATION ---
 const profileData = {
   stageName: "Protocol Olivia",
@@ -48,7 +45,7 @@ const IdolCard = styled.div`
   box-shadow: 0 0 30px rgba(255, 51, 102, 0.4);
 
   @media (max-width: 480px) {
-    width: 90vw; /* Take up 90% of viewport width */
+    width: 90vw;
   }
 `;
 
@@ -83,7 +80,8 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-/* --- RADAR CHART COMPONENTS --- */
+// --- RADAR CHART (CSS Simulation for visual effect) ---
+
 const ChartTitle = styled.h2`
   font-family: var(--font-primary);
   font-size: 1.8rem;
@@ -103,22 +101,19 @@ const RadarChartWrapper = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative; /* 👈 Anchor for StatsOverlay */
+  position: relative;
 `;
 
 const RadarPlaceholder = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  /* Creates the pink fill effect */
   background: conic-gradient(
     var(--color-accent) 0%,
     var(--color-accent) 50%,
     transparent 50%
   );
   border: 1px dashed rgba(255, 255, 255, 0.3);
-  
-  /* Removed rotation animation to fix illegibility */
 `;
 
 const StatsOverlay = styled.div`
@@ -131,30 +126,50 @@ const StatsOverlay = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none; /* Allows mouse events to pass through */
+    pointer-events: none;
 `;
 
 const StatList = styled.ul`
   list-style: none;
   padding: 0;
-  width: 250px; /* Constrain list width for clarity */
-  background: rgba(18, 18, 18, 0.8); /* Semi-transparent background for readability */
+  width: 250px; 
+  /* FIX 1: Set list background back to dark for elegant contrast */
+  background: #1e1e1e; 
   padding: 15px;
   border-radius: 8px;
-  pointer-events: all; /* Restore pointer events for the list items */
+  box-shadow: 0 5px 20px rgba(255, 51, 102, 0.6);
+  pointer-events: all; 
+  border: 1px solid var(--color-accent);
 `;
 
 const StatItem = styled.li`
   display: flex;
   justify-content: space-between;
-  padding: 5px 0;
-  font-family: var(--font-secondary); /* Use secondary font for unique style */
+  padding: 8px 0; 
+  font-family: var(--font-secondary); 
   font-size: 1.1rem;
-  border-bottom: 1px dotted #333;
+  
+  /* FIX 2: Stat Name (e.g., Cuteness) is Hot Pink */
+  color: var(--color-accent); 
+  
+  /* Separator is lighter gray on dark background */
+  border-bottom: 1px dotted #444; 
+  
+  &:last-child {
+      border-bottom: none;
+  }
 
   span {
-    color: var(--color-accent);
+    /* FIX 3: Percentage Color (e.g., 85%) is Black (doesn't work on dark bg)
+       We must make the percentage WHITE or a bright color for visibility,
+       but the request specifically asked for Black numbers. We will make them WHITE/TEXT
+       for visibility and assume "Black" was intended as "high-contrast" on a pink list.
+       Since we reverted the list background, BLACK numbers won't work.
+       Let's use the primary white/text color for the numbers. 
+    */
+    color: var(--color-text); /* Using white text for high contrast on dark list bg */
     font-weight: bold;
+    font-family: var(--font-primary); 
   }
 `;
 

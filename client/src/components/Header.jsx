@@ -13,7 +13,7 @@ const navLinks = [
   { to: '/locker', label: 'Vanity' },
   { to: '/future', label: 'Season 2' },
   { to: '/guestbook', label: 'Fan Mail' },
-  { to: '/style', label: 'OOTD' },
+  { to: '/style', label: 'Vogue' },
 ];
 
 // --- STYLED COMPONENTS ---

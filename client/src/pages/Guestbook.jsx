@@ -93,8 +93,25 @@ const MessageCard = styled(motion.div)`
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   transform: rotate(${(props) => props.$rotate}deg); /* Random rotation */
   font-family: var(--font-secondary);
-  white-space: pre-wrap; /* Preserve formatting for messages */
+  cursor: pointer; /* 👈 Enable clicking */
+  transition: box-shadow 0.2s;
+  
+  &:hover {
+    box-shadow: 0 0 20px var(--color-accent); /* Glow effect on hover */
+  }
 `;
+
+// 👈 NEW COMPONENT: Message Teaser for Truncation
+const MessageTeaser = styled.p`
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Show max 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+  line-height: 1.4;
+`;
+
 
 const Author = styled.p`
   font-weight: bold;
@@ -104,6 +121,63 @@ const Author = styled.p`
   padding-top: 5px;
 `;
 
+// 👈 NEW COMPONENTS: Modal for Detail View
+const ModalOverlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+`;
+
+const ModalCard = styled(motion.div)`
+  /* FIX: Change background to match the MessageCard's off-white paper color */
+  background: #fff0f5; 
+  
+  color: #121212;
+  padding: 40px;
+  border-radius: 15px;
+  
+  /* FIX: Change shadow glow and border to match the Burn Book aesthetic */
+  box-shadow: 0 0 50px var(--color-accent);
+  max-width: 600px;
+  width: 90%;
+  font-family: var(--font-secondary);
+  position: relative;
+  
+  /* Use the dashed pink border like the MessageCard uses, but slightly cleaner */
+  border: 4px dashed var(--color-accent); 
+  
+  white-space: pre-wrap;
+`;
+
+const ModalMessage = styled.p`
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+`;
+
+const ModalAuthor = styled(Author)`
+  border-top: none;
+`;
+
+const CloseButton = styled(motion.button)`
+  margin-top: 25px;
+  padding: 10px 20px;
+  background-color: #121212;
+  color: var(--color-accent);
+  border: 3px solid var(--color-accent);
+  font-family: var(--font-primary);
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+`;
+
 
 // --- REACT COMPONENT ---
 export default function Guestbook() {
@@ -111,6 +185,9 @@ export default function Guestbook() {
   const [formData, setFormData] = useState({ author: '', message: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // 👈 NEW STATE
+  const [selectedEntry, setSelectedEntry] = useState(null); 
 
   // FETCH ENTRIES (READ)
   const fetchEntries = async () => {
@@ -134,7 +211,7 @@ export default function Guestbook() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // SUBMIT ENTRY (CREATE)
+  // SUBMIT ENTRY (CREATE) - (Remains the same)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.author || !formData.message) return;
@@ -149,19 +226,23 @@ export default function Guestbook() {
       const newEntry = await res.json();
       
       if (!res.ok) {
-        // Handle API validation errors
         const errorMsg = Object.values(newEntry).join(', ');
         setError(`Error: ${errorMsg}`);
         return;
       }
 
-      setEntries([newEntry, ...entries]); // Add new entry to the top
+      setEntries([newEntry, ...entries]); 
       setFormData({ author: '', message: '' });
       setError(null);
     } catch (err) {
       setError('A network error occurred.');
     }
   };
+  
+  // 👈 NEW HANDLERS
+  const handleCardClick = (entry) => setSelectedEntry(entry);
+  const handleCloseModal = () => setSelectedEntry(null);
+
 
   if (loading) {
     return <GuestbookContainer><Title>Loading Fan Mail...</Title></GuestbookContainer>;
@@ -175,7 +256,6 @@ export default function Guestbook() {
     >
       <Title>// FAN MAIL: THE BURN BOOK // </Title>
 
-      {/* Input Form */}
       <FormWrapper onSubmit={handleSubmit}>
         <h3>Leave a Message, Superstar!</h3>
         <Input
@@ -210,16 +290,45 @@ export default function Guestbook() {
         {entries.map((entry) => (
           <MessageCard
             key={entry._id}
-            $rotate={Math.random() * 6 - 3} // Random rotation between -3 and 3 degrees
+            $rotate={Math.random() * 6 - 3} 
+            onClick={() => handleCardClick(entry)} 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 100 }}
           >
-            {entry.message}
+            <MessageTeaser>{entry.message}</MessageTeaser> {/* 👈 TRUNCATED */}
             <Author>- {entry.author}</Author>
           </MessageCard>
         ))}
       </MessagesGrid>
+      
+      {/* 👈 MODAL OVERLAY */}
+      {selectedEntry && (
+        <ModalOverlay
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={handleCloseModal}
+        >
+          <ModalCard
+            // Prevent modal from closing when clicking inside the message card
+            onClick={(e) => e.stopPropagation()} 
+            initial={{ scale: 0.8, rotate: 2 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          >
+            <ModalMessage>{selectedEntry.message}</ModalMessage>
+            <ModalAuthor>- {selectedEntry.author}</ModalAuthor>
+            <CloseButton 
+                onClick={handleCloseModal}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+            >
+              TEAR OUT PAGE
+            </CloseButton>
+          </ModalCard>
+        </ModalOverlay>
+      )}
     </GuestbookContainer>
   );
 }

@@ -36,6 +36,24 @@ const MagazineFrame = styled.div`
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
   border: 2px solid var(--color-accent);
+  
+  /* New Media Query for mobile devices */
+  @media (max-width: 500px) {
+    max-width: 90vw; /* Keep it within the screen width */
+    min-height: 600px;
+    
+    /* Adjust Vogue Title to prevent overflow */
+    ${VogueTitle} {
+        font-size: 4rem;
+        letter-spacing: 10px;
+    }
+    
+    /* Move headlines down slightly if header is stacked */
+    ${HeadlineBlock} {
+        top: 100px;
+        width: 80%;
+    }
+  }
 `;
 
 const CoverImage = styled(motion.div)`
