@@ -7,8 +7,9 @@ import CircularGallery from '../components/CircularGallery';
 
 // --- DATA SIMULATION ---
 // IMPORTANT: Use relative paths for images, and ensure they are placed in your public folder
+// Increased items to 10 for better loop consistency
 const galleryItems = [
-  { image: '/images/polaroid-1.jpg', text: 'Sweet Memories' },
+  { image: '/WIN_20240313_14_31_39_Pro.jpg', text: 'Sweet Memories' },
   { image: '/images/polaroid-2.jpg', text: 'Road Trip Vibes' },
   { image: '/images/polaroid-3.jpg', text: 'Sour Face Era' },
   { image: '/images/polaroid-4.jpg', text: 'Late Night Talks' },
@@ -23,6 +24,8 @@ const galleryItems = [
 // --- STYLED COMPONENTS ---
 
 const GalleryPageContainer = styled(motion.div)`
+  /* The Layout component already gives us 100px padding-top. 
+     We set min-height to fill the viewport below the header. */
   min-height: calc(100vh - 100px); 
   padding: 0;
   display: flex;
@@ -43,10 +46,9 @@ const GalleryTitle = styled.h2`
 const GalleryCanvasWrapper = styled.div`
   /* CRUCIAL: The canvas needs a defined height relative to the container. */
   width: 100%;
-  /* Use the viewport height minus the space needed for the Header (100px) and the Title (50px margin) */
+  /* Use the viewport height minus the space needed for the Header (100px) and the Title/margin (50px) */
   height: calc(100vh - 150px); 
   position: relative; 
-  /* Add padding to the wrapper to make the "track" area visible inside the screen */
   padding: 0 50px; 
 `;
 
@@ -57,9 +59,9 @@ export default function Gallery() {
   // Configuration for the "Polaroid Sweet & Sour" look:
   const galleryProps = {
     items: galleryItems,
-    rows: 3, // 3-row layout
+    rows: 2, // Changed to 2 rows to maximize photo height/size
     bend: 4, // Subtle circular bend
-    textColor: '#121212', // Dark text on white polaroid frame (matches var(--color-background))
+    textColor: '#121212', // Dark text (var(--color-background)) for readability on the white frame
     borderRadius: 0.05, // Slight rounding on the photo part inside the frame
     scrollSpeed: 2.5,
     scrollEase: 0.08

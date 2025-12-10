@@ -143,7 +143,8 @@ class Media {
     this.createShader();
     this.createMesh();
     this.createTitle();
-    this.onResize();
+    // this.onResize(); // 👈 FIX 2: Removed redundant initial call to onResize(). 
+                      // The App constructor now handles the initial resize for all medias.
   }
   createShader() {
     const texture = new Texture(this.gl, {
@@ -368,9 +369,11 @@ class App {
     this.createRenderer();
     this.createCamera();
     this.createScene();
-    this.onResize();
-    this.createGeometry();
-    this.createMedias(items, bend, textColor, borderRadius, font);
+    
+    this.createGeometry(); // 👈 FIX 1: Move createGeometry before createMedias
+    this.createMedias(items, bend, textColor, borderRadius, font); // 👈 FIX 1: Move createMedias before onResize
+    this.onResize(); // 👈 FIX 1: Call onResize *after* media elements are created
+    
     this.update();
     this.addEventListeners();
   }
@@ -545,7 +548,7 @@ export default function CircularGallery({
 }) {
   const containerRef = useRef(null);
   useEffect(() => {
-    // Note: The App constructor now correctly initializes `this.medias = []` before calling `onResize()` and `update()`.
+    // Note: The App constructor now correctly initializes all ogl.js components in the right order.
     const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, rows });
     return () => {
       app.destroy();
