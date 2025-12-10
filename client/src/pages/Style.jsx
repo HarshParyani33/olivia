@@ -27,6 +27,59 @@ const CoverContainer = styled(motion.div)`
   min-height: calc(100vh - 100px);
 `;
 
+const VogueTitle = styled(motion.h1)`
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--color-text);
+  text-align: center;
+  z-index: 10;
+  letter-spacing: 15px;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+`;
+
+const HeadlineBlock = styled.div`
+  position: absolute;
+  top: 150px;
+  left: 10px;
+  width: 250px;
+  z-index: 10;
+`;
+
+const NameOverlay = styled(motion.h2)`
+  position: absolute;
+  bottom: 200px;
+  left: 0;
+  width: 100%;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 3.5rem;
+  color: var(--color-accent);
+  text-align: center;
+  z-index: 10;
+  transform: rotate(-3deg);
+  animation: ${GlamourGlow} 3s infinite;
+`;
+
+const Headline = styled(motion.p)`
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15px;
+  padding: 5px;
+  background: rgba(18, 18, 18, 0.7);
+  border-left: 5px solid var(--color-accent);
+  cursor: pointer;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: rgba(255, 51, 102, 0.2);
+  }
+`;
+
 const MagazineFrame = styled.div`
   width: 100%;
   max-width: 450px;
@@ -66,59 +119,6 @@ const CoverImage = styled(motion.div)`
     linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 40%),
     url(${props => props.$src}) no-repeat center bottom;
   background-size: cover;
-`;
-
-const VogueTitle = styled(motion.h1)`
-  position: absolute;
-  top: 20px;
-  width: 100%;
-  font-family: 'Playfair Display', serif;
-  font-size: 5rem;
-  font-weight: 900;
-  color: var(--color-text);
-  text-align: center;
-  z-index: 10;
-  letter-spacing: 15px;
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
-`;
-
-const NameOverlay = styled(motion.h2)`
-  position: absolute;
-  bottom: 200px;
-  left: 0;
-  width: 100%;
-  font-family: 'Permanent Marker', cursive;
-  font-size: 3.5rem;
-  color: var(--color-accent);
-  text-align: center;
-  z-index: 10;
-  transform: rotate(-3deg);
-  animation: ${GlamourGlow} 3s infinite;
-`;
-
-const HeadlineBlock = styled.div`
-  position: absolute;
-  top: 150px;
-  left: 10px;
-  width: 250px;
-  z-index: 10;
-`;
-
-const Headline = styled(motion.p)`
-  font-family: var(--font-primary);
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 15px;
-  padding: 5px;
-  background: rgba(18, 18, 18, 0.7);
-  border-left: 5px solid var(--color-accent);
-  cursor: pointer;
-  transition: background 0.2s;
-  
-  &:hover {
-    background: rgba(255, 51, 102, 0.2);
-  }
 `;
 
 // --- REACT COMPONENT ---

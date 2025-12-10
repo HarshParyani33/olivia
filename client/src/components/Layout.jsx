@@ -1,21 +1,28 @@
+// client/src/components/Layout.jsx (Updated)
+
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import Header from './Header'; // Assuming Header.jsx is in the same directory
+import Header from './Header'; 
 
 // --- STYLED COMPONENTS ---
 const MainContent = styled(motion.main)`
-  /* Push content down past the fixed header height */
+  /* Push content down past the fixed header height (Desktop) */
   padding-top: 100px; 
   min-height: 100vh;
   background-color: var(--color-background);
   color: var(--color-text);
   
-  /* Apply side padding for content safety */
   padding-left: 50px;
   padding-right: 50px;
 
-  /* Optional smooth transition for main content as it loads/changes */
+  /* MOBILE FIX: Increase padding-top substantially because the Header stacks and becomes taller (~150-180px) */
+  @media (max-width: 768px) {
+    padding-top: 180px; 
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
   transition: opacity 0.5s ease-in-out;
 `;
 
