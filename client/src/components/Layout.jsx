@@ -1,4 +1,4 @@
-// client/src/components/Layout.jsx (Updated)
+// client/src/components/Layout.jsx
 
 import React from 'react';
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import Header from './Header';
 
 // --- STYLED COMPONENTS ---
 const MainContent = styled(motion.main)`
-  /* Push content down past the fixed header height (Desktop) */
+  /* Desktop Padding */
   padding-top: 100px; 
   min-height: 100vh;
   background-color: var(--color-background);
@@ -16,7 +16,7 @@ const MainContent = styled(motion.main)`
   padding-left: 50px;
   padding-right: 50px;
 
-  /* MOBILE FIX: Increase padding-top substantially because the Header stacks and becomes taller (~150-180px) */
+  /* MOBILE FIX: Increase padding-top significantly because the Header stacks */
   @media (max-width: 768px) {
     padding-top: 180px; 
     padding-left: 15px;

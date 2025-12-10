@@ -23,6 +23,10 @@ const SectionTitle = styled.h2`
   color: var(--color-text);
   margin-bottom: 20px;
   font-family: var(--font-primary);
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 const EpisodesRow = styled.div`
@@ -30,12 +34,13 @@ const EpisodesRow = styled.div`
   gap: 15px;
   overflow-x: scroll; /* Enable horizontal scrolling like Netflix */
   padding-bottom: 20px;
-  /* Hide standard scrollbar for cleaner look (optional) */
+
+  /* Hide standard scrollbar for cleaner look */
   &::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 const EpisodeCard = styled(motion.div)`
@@ -55,6 +60,12 @@ const EpisodeCard = styled(motion.div)`
     transform: scale(1.05); /* Zoom effect on hover */
     z-index: 10;
     box-shadow: 0 8px 25px var(--color-accent); /* Pink glow */
+  }
+
+  /* MOBILE: Smaller card size for dense rows */
+  @media (max-width: 500px) {
+    width: 250px;
+    height: 140px;
   }
 `;
 
@@ -79,6 +90,10 @@ const CardTitle = styled.p`
   font-size: 1rem;
   color: white;
   margin-bottom: 3px;
+
+  @media (max-width: 500px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const CardFriend = styled.small`

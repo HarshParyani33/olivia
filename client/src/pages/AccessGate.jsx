@@ -89,8 +89,8 @@ const ErrorMessage = styled.p`
 
 
 // --- ACCESS GATE LOGIC ---
-const CORRECT_PASSWORD = 'spilledwine'; // Placeholder, replace with your secret password
-const CORRECT_PIN = '091203'; // Placeholder, replace with your 6-digit PIN (Her birthday?)
+const CORRECT_PASSWORD = 'oreoshake'; // Placeholder, replace with your secret password
+const CORRECT_PIN = '030124'; // Placeholder, replace with your 6-digit PIN (Her birthday?)
 
 export default function AccessGate({ setAuthenticated }) {
   const [password, setPassword] = useState('');

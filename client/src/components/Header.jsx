@@ -1,3 +1,5 @@
+// client/src/components/Header.jsx
+
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
@@ -5,7 +7,7 @@ import { motion } from 'framer-motion';
 
 // --- NAV DATA ---
 const navLinks = [
-  { to: '/home', label: 'Home' }, // Home is now the LandingPage
+  { to: '/home', label: 'Home' }, 
   { to: '/episodes', label: 'The Impact' },
   { to: '/profile', label: 'Her Era' },
   { to: '/gallery', label: 'Sour & Sweet' },
@@ -13,7 +15,7 @@ const navLinks = [
   { to: '/locker', label: 'Vanity' },
   { to: '/future', label: 'Season 2' },
   { to: '/guestbook', label: 'Fan Mail' },
-  { to: '/style', label: 'Vogue' },
+  { to: '/style', label: 'OOTD' },
 ];
 
 // --- STYLED COMPONENTS ---
@@ -27,14 +29,15 @@ const NavWrapper = styled(motion.header)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* Dark translucent background for Netflix look */
   background: rgba(18, 18, 18, 0.8); 
   backdrop-filter: blur(5px);
 
+  /* MOBILE: Stack vertically and reduce padding */
   @media (max-width: 768px) {
-    padding: 15px 20px;
-    flex-direction: column; /* Stack logo and links */
-    height: auto; /* Allow height to expand */
+    padding: 15px 10px;
+    flex-direction: column; 
+    height: auto; /* Auto height to accommodate stacked links */
+    text-align: center;
   }
 `;
 
@@ -50,11 +53,13 @@ const Logo = styled(Link)`
 const NavLinks = styled.nav`
   display: flex;
   gap: 25px;
+  flex-wrap: wrap; 
+  justify-content: center;
 
+  /* MOBILE: Use smaller links, wrap, and reduce gap */
   @media (max-width: 768px) {
     width: 100%;
-    gap: 10px;
-    justify-content: space-around; /* Distribute links evenly */
+    gap: 8px 12px;
     margin-top: 10px;
   }
 `;
@@ -62,6 +67,13 @@ const NavLinks = styled.nav`
 const NavItem = styled(Link)`
   font-family: var(--font-primary);
   font-size: 1.1rem;
+  
+  /* MOBILE: Smaller font size for links */
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 2px 5px;
+  }
+  
   font-weight: ${({ $isActive }) => ($isActive ? 'bold' : 'normal')};
   color: ${({ $isActive }) => ($isActive ? 'var(--color-accent)' : 'var(--color-text)')};
   opacity: ${({ $isActive }) => ($isActive ? 1 : 0.7)};
