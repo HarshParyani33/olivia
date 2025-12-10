@@ -1,3 +1,5 @@
+// client/src/pages/Gallery.jsx
+
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -59,9 +61,9 @@ export default function Gallery() {
   // Configuration for the "Polaroid Sweet & Sour" look:
   const galleryProps = {
     items: galleryItems,
-    rows: 2, // Changed to 2 rows to maximize photo height/size
+    rows: 1, // Changed to 1 row as requested
     bend: 4, // Subtle circular bend
-    textColor: '#121212', // Dark text (var(--color-background)) for readability on the white frame
+    textColor: '#121212', // Dark text for readability on the white frame
     borderRadius: 0.05, // Slight rounding on the photo part inside the frame
     scrollSpeed: 2.5,
     scrollEase: 0.08

@@ -57,11 +57,13 @@ class Title {
     this.plane = plane;
     this.renderer = renderer;
     this.text = text;
-    this.textColor = textColor;
+    // FIX: Use the passed in textColor (which Gallery.jsx sets to #121212)
+    this.textColor = textColor; 
     this.font = font;
     this.createMesh();
   }
   createMesh() {
+    // Note: createTextTexture uses this.textColor 
     const { texture, width, height } = createTextTexture(this.gl, this.text, this.font, this.textColor);
     const geometry = new Plane(this.gl);
     const program = new Program(this.gl, {
@@ -82,7 +84,8 @@ class Title {
         varying vec2 vUv;
         void main() {
           vec4 color = texture2D(tMap, vUv);
-          if (color.a < 0.1) discard;
+          // Only draw the text where it has opacity
+          if (color.a < 0.1) discard; 
           gl_FragColor = color;
         }
       `,
@@ -91,10 +94,19 @@ class Title {
     });
     this.mesh = new Mesh(this.gl, { geometry, program });
     const aspect = width / height;
-    const textHeight = this.plane.scale.y * 0.2; // Adjusted size for Polaroid
+    
+    // Text height scaled based on the plane (e.g., 15% of the polaroid height)
+    const textHeight = this.plane.scale.y * 0.15; 
     const textWidth = textHeight * aspect;
+    
     this.mesh.scale.set(textWidth, textHeight, 1);
-    this.mesh.position.y = -this.plane.scale.y * 0.5 - textHeight * 0.5 - 0.05; // Position below image
+    
+    // FIX 2: Correctly position the title in the middle of the 'fat' bottom border.
+    // The total plane scale is 1. The caption area is from Y=-0.5 to Y=-0.3 (in world space).
+    // The center of this area is at Y = -0.4 * plane.scale.y
+    const captionAreaCenterRatio = 0.4;
+    this.mesh.position.y = -this.plane.scale.y * captionAreaCenterRatio; 
+
     this.mesh.setParent(this.plane);
   }
 }
@@ -143,8 +155,6 @@ class Media {
     this.createShader();
     this.createMesh();
     this.createTitle();
-    // this.onResize(); // 👈 FIX 2: Removed redundant initial call to onResize(). 
-                      // The App constructor now handles the initial resize for all medias.
   }
   createShader() {
     const texture = new Texture(this.gl, {
@@ -169,12 +179,14 @@ class Media {
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
       `,
+      // 👈 CRITICAL: Corrected fragment shader for Polaroid white frame and image visibility
       fragment: `
         precision highp float;
         uniform vec2 uImageSizes;
         uniform vec2 uPlaneSizes;
         uniform sampler2D tMap;
         uniform float uBorderRadius;
+        uniform vec3 uFrameColor; 
         varying vec2 vUv;
         
         float roundedBoxSDF(vec2 p, vec2 b, float r) {
@@ -183,23 +195,65 @@ class Media {
         }
         
         void main() {
-          vec2 ratio = vec2(
-            min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
-            min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
-          );
-          vec2 uv = vec2(
-            vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
-            vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
-          );
-          vec4 color = texture2D(tMap, uv);
+          // Define the picture area: top 80% of the plane for image, bottom 20% for caption
+          float pictureHeightRatio = 0.8; 
+          float pictureBottom = 1.0 - pictureHeightRatio; // 0.2
           
-          float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
+          // 1. Set the base color to White (the frame)
+          vec4 finalColor = vec4(uFrameColor, 1.0); 
           
-          // Smooth antialiasing for edges
-          float edgeSmooth = 0.002;
-          float alpha = 1.0 - smoothstep(-edgeSmooth, edgeSmooth, d);
+          // 2. Check if we are in the picture area (vUv.y >= 0.2)
+          if (vUv.y >= pictureBottom) {
+              
+              // Remap V coordinate to the picture area [0, 1]. V=0 at pictureBottom, V=1 at top.
+              vec2 pictureUv = vec2(vUv.x, (vUv.y - pictureBottom) / pictureHeightRatio);
+
+              // Aspect ratio calculation: Ratio of texture area (scaled by pictureHeightRatio) to image dimensions
+              vec2 ratio = vec2(
+                min((uPlaneSizes.x / (pictureHeightRatio * uPlaneSizes.y)) / (uImageSizes.x / uImageSizes.y), 1.0),
+                min(((pictureHeightRatio * uPlaneSizes.y) / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
+              );
+              
+              // Apply ratio containment and center the image in the picture area
+              vec2 uv = vec2(
+                  pictureUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
+                  (pictureUv.y * ratio.y + (1.0 - ratio.y) * 0.5)
+              );
+
+              vec4 color = texture2D(tMap, uv);
+              
+              // 3. Apply inner photo border (thin black line inside the white frame)
+              float inset = 0.02; // Small border width relative to picture area 
+              
+              // Check for the photo border area. (pictureUv is scaled 0 to 1)
+              if (pictureUv.x < inset || pictureUv.x > (1.0 - inset) || 
+                  pictureUv.y < inset || pictureUv.y > (1.0 - inset)) {
+                  
+                  finalColor.rgb = vec3(0.0, 0.0, 0.0); // Black border
+              } else {
+                  // Inside the photo area: draw the image texture.
+                  finalColor.rgb = color.rgb; 
+              }
+
+              // Apply rounded corners to the photo area only
+              if (uBorderRadius > 0.0) {
+                  // Rescale pictureUv (0 to 1) to (-1 to 1) for SDF
+                  vec2 sdfUv = (pictureUv - 0.5) * 2.0; 
+                  // Use slightly smaller bounds than 1.0 for the border to appear outside the rounded photo
+                  float d = roundedBoxSDF(sdfUv, vec2(1.0 - uBorderRadius * 1.5), uBorderRadius * 1.5);
+                  float edgeSmooth = 0.005;
+                  float alpha = 1.0 - smoothstep(-edgeSmooth, edgeSmooth, d);
+                  // Discard the corners outside the rounded photo edge
+                  if (alpha < 0.1) discard; 
+                  // If we are in the photo area (which is opaque), leave color as is.
+              }
+              
+          } else {
+              // We are in the bottom white caption area (vUv.y < 0.2), keep it white.
+              finalColor.rgb = uFrameColor;
+          }
           
-          gl_FragColor = vec4(color.rgb, alpha);
+          gl_FragColor = finalColor;
         }
       `,
       uniforms: {
@@ -208,9 +262,11 @@ class Media {
         uImageSizes: { value: [0, 0] },
         uSpeed: { value: 0 },
         uTime: { value: 100 * Math.random() },
-        uBorderRadius: { value: this.borderRadius }
+        uBorderRadius: { value: this.borderRadius },
+        uFrameColor: { value: [1, 1, 1] } // White color
       },
-      transparent: true
+      // IMPORTANT: Set transparent to false to ensure the white frame is fully opaque.
+      transparent: false 
     });
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -310,17 +366,21 @@ class Media {
     
     this.scale = this.screen.height / 1500;
     
-    // Scale for Polaroid aspect ratio and multi-row layout
-    const mediaHeightScale = 1100 * this.scale; 
+    // Scale for Polaroid aspect ratio and multi-row layout 
+    const mediaHeightScale = 1100 * this.scale;
     const mediaWidthScale = 700 * this.scale;
     
-    // Divide plane scale by number of rows
-    this.plane.scale.y = (this.viewport.height * mediaHeightScale) / this.screen.height / this.rows;
-    this.plane.scale.x = (this.viewport.width * mediaWidthScale) / this.screen.width / this.rows;
+    // Adjusted sizing logic for approximately 4 items per row
+    const fitFactor = 0.6; 
+    
+    // Adjusted scale to create a more rectangular (polaroid) shape 
+    this.plane.scale.y = (this.viewport.height * mediaHeightScale) / this.screen.height / this.rows * 0.6; 
+    this.plane.scale.x = (this.viewport.width * mediaWidthScale) / this.screen.width / this.rows * 0.8;
     
     this.plane.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
     
-    this.padding = 1.5; 
+    // Increased padding to push items apart and show fewer per row (approximately 4)
+    this.padding = 3; 
     this.width = this.plane.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
     
@@ -328,7 +388,7 @@ class Media {
     this.x = this.width * this.index; 
     
     // Vertical position (Centers the block of rows)
-    const totalRowHeight = this.plane.scale.y + this.padding;
+    const totalRowHeight = this.plane.scale.y + this.padding * 0.5;
     this.y = totalRowHeight * (this.row - (this.rows - 1) / 2); 
     
     // Resize the Title as well
@@ -370,9 +430,10 @@ class App {
     this.createCamera();
     this.createScene();
     
-    this.createGeometry(); // 👈 FIX 1: Move createGeometry before createMedias
-    this.createMedias(items, bend, textColor, borderRadius, font); // 👈 FIX 1: Move createMedias before onResize
-    this.onResize(); // 👈 FIX 1: Call onResize *after* media elements are created
+    // Corrected initialization order to prevent 'forEach' of undefined error.
+    this.createGeometry(); 
+    this.createMedias(items, bend, textColor, borderRadius, font); 
+    this.onResize(); // Called after media elements are initialized.
     
     this.update();
     this.addEventListeners();
@@ -384,7 +445,8 @@ class App {
       dpr: Math.min(window.devicePixelRatio || 1, 2)
     });
     this.gl = this.renderer.gl;
-    this.gl.clearColor(0, 0, 0, 0);
+    // Set clear color to transparent black (0,0,0,0) 
+    this.gl.clearColor(0, 0, 0, 0); 
     this.container.appendChild(this.gl.canvas);
   }
   createCamera() {
@@ -408,7 +470,8 @@ class App {
       { image: `https://picsum.photos/seed/3/800/600?grayscale`, text: 'Waterfall' },
       { image: `https://picsum.photos/seed/4/800/600?grayscale`, text: 'Strawberries' },
     ];
-    const galleryItems = items && items.length ? items : defaultItems;
+    // This uses your items array if provided, otherwise the default fallback
+    const galleryItems = items && items.length ? items : defaultItems; 
     
     // Duplicating the array items multiple times for seamless wrapping
     const totalItems = galleryItems.length;
@@ -548,7 +611,6 @@ export default function CircularGallery({
 }) {
   const containerRef = useRef(null);
   useEffect(() => {
-    // Note: The App constructor now correctly initializes all ogl.js components in the right order.
     const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, rows });
     return () => {
       app.destroy();

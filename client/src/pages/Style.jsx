@@ -10,7 +10,7 @@ const magazineData = {
   headline2: "BREAKING FREE: The Sour Sound That Defined a Generation.",
   featureStory: "Her most iconic looks, analyzed by the fashion elite.",
   photo: "/images/style-cover.jpg", // Placeholder photo
-  name: "[GIRLFRIEND'S NAME]",
+  name: "Smriti Bisht",
 };
 
 // --- STYLED COMPONENTS ---

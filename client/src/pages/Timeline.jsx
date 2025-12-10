@@ -139,7 +139,7 @@ export default function Timeline() {
       </VinylWrapper>
       
       <MilestoneList>
-        <ChartTitle>// DISCOGRAPHY // </ChartTitle>
+        <ChartTitle>//DISCOGRAPHY// </ChartTitle>
         <div style={{ marginBottom: '20px' }}>
           {timelineTracks.map(track => (
             <TrackButton
