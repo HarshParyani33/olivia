@@ -99,7 +99,7 @@ export default function LandingPage() {
         >
           <ContentBox variants={contentVariants}>
             <HeroTitle variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-              The Era of [GIRLFRIEND'S NAME]
+              The Era of [Smriti]
             </HeroTitle>
             <Description variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
               "She's the main character. You should be so lucky to be in her presence."

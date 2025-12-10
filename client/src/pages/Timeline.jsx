@@ -30,6 +30,14 @@ const TimelineContainer = styled(motion.div)`
   flex-wrap: wrap;
 `;
 
+const ChartTitle = styled.h2`
+  font-family: var(--font-primary);
+  font-size: 2.5rem;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+  text-align: center;
+`;
+
 const VinylWrapper = styled(motion.div)`
   position: relative;
   width: 450px;
