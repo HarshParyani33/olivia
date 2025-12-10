@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
+import VideoPlayer from '../components/VideoPlayer';
 
 // --- STYLED COMPONENTS (Keep the Hero styles) ---
 const HeroContainer = styled(motion.div)`
@@ -84,6 +85,8 @@ export default function LandingPage() {
       } 
     },
   };
+
+  const TRAILER_URL = "YOUR_CLOUDINARY_TRAILER_URL_HERE";
 
   return (
     <>
