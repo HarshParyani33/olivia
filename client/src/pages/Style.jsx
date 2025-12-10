@@ -9,7 +9,7 @@ const magazineData = {
   headline1: "THE UNSTOPPABLE: How She Became Her Own Main Character.",
   headline2: "BREAKING FREE: The Sour Sound That Defined a Generation.",
   featureStory: "Her most iconic looks, analyzed by the fashion elite.",
-  photo: "/images/style-cover.jpg", // Placeholder photo
+  photo: "/WIN_20240313_14_31_39_Pro.jpg", // Placeholder photo
   name: "Smriti Bisht",
 };
 

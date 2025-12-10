@@ -9,7 +9,7 @@ const profileData = {
   birthDate: "Sept 12",
   position: "Vocalist, Visual, Main Character",
   favoriteTrack: "Driver's License (Remix)",
-  photo: "/images/profile-hero.jpg", // Placeholder photo
+  photo: "/WIN_20240313_14_31_39_Pro.jpg", // Placeholder photo
   stats: {
     Cuteness: 99,
     Sass: 95,
