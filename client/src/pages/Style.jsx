@@ -1,6 +1,6 @@
 // client/src/pages/Style.jsx
 
-import React from 'react';
+import React, { useState } from 'react'; // <--- MODIFIED: Import useState
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 
@@ -43,7 +43,7 @@ const VogueTitle = styled(motion.h1)`
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 `;
 
-// MODIFIED: Changed 'top: 150px' to 'bottom: 50px' to move the headlines to the bottom-left
+// MODIFIED: Positioned headlines to the bottom-left
 const HeadlineBlock = styled.div`
   position: absolute;
   bottom: 50px; 
@@ -106,8 +106,7 @@ const MagazineFrame = styled.div`
     
     /* Move headlines down slightly if header is stacked */
     ${HeadlineBlock} {
-        /* This is the mobile override for the HeadlineBlock */
-        bottom: 70px; /* Adjusted slightly higher for smaller screens */
+        bottom: 70px;
         width: 80%;
     }
   }
@@ -127,6 +126,9 @@ const CoverImage = styled(motion.div)`
 
 // --- REACT COMPONENT ---
 export default function Style() {
+    // 1. ADD STATE for the dynamic filter effect
+    const [coverFilter, setCoverFilter] = useState('none'); 
+
   return (
     <CoverContainer
       initial={{ opacity: 0 }}
@@ -135,10 +137,18 @@ export default function Style() {
     >
       <MagazineFrame>
         
+        {/* 2. APPLY DYNAMIC FILTER style to the image */}
         <CoverImage 
           $src={magazineData.photo}
+          // Add the transition style directly
+          style={{ filter: coverFilter, transition: 'filter 0.5s ease-in-out' }}
+          
+          // Ensure initial animation blends into the state filter
           initial={{ scale: 1.1, filter: 'grayscale(100%)' }}
-          animate={{ scale: 1, filter: 'grayscale(0%)' }}
+          animate={{ 
+            scale: 1, 
+            filter: coverFilter === 'none' ? 'grayscale(0%)' : coverFilter,
+          }}
           transition={{ delay: 0.5, duration: 1.5 }}
         />
 
@@ -152,7 +162,8 @@ export default function Style() {
         
         <HeadlineBlock>
           <Headline 
-            onClick={() => alert(`Headline: ${magazineData.headline1}`)}
+            // 3. UPDATE onClick: Set a bright, saturated filter
+            onClick={() => setCoverFilter('saturate(1.5) contrast(1.1)')}
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.8 }}
@@ -161,7 +172,8 @@ export default function Style() {
           </Headline>
           
           <Headline 
-            onClick={() => alert(`Headline: ${magazineData.headline2}`)}
+            // 4. UPDATE onClick: Set a moody, sepia filter
+            onClick={() => setCoverFilter('grayscale(0.5) sepia(0.3) brightness(0.7)')} 
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 1.0 }}
