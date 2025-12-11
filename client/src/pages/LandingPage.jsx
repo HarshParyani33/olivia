@@ -122,7 +122,7 @@ export default function LandingPage() {
   };
 
   // WARNING: This link must be the direct MP4/WebM URL from Cloudinary, not the /embed/ link.
-  const TRAILER_URL = "";
+  const TRAILER_URL = "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765469414/VN20251211_212550_dexnr8.mp4";
 
   return (
     <>

@@ -31,6 +31,30 @@ const videoData = [
     duration: "3:01", 
     videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765442692/VN20251211_135428_hb10sm.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
   },
+  { 
+    id: 4, 
+    title: "Season 1, Ep4 : The Talkative One", 
+    friend: "Kasak Singh", 
+    thumbnail: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765469243/Screenshot_2025-12-11_213705_ethm7g.png", 
+    duration: "6:01", 
+    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765469356/VN20251211_165228_zrhuop.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
+  },
+  { 
+    id: 5, 
+    title: "Season 1, Ep5 : The Talkative One- part-2", 
+    friend: "Kasak Singh", 
+    thumbnail: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765469003/Screenshot_2025-12-11_213217_xkhhze.png", 
+    duration: "6:01", 
+    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765468961/VN20251211_174015_zgwdpp.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
+  },
+  { 
+    id: 6, 
+    title: "The Trailer: Friendship Era", 
+    friend: "All of us", 
+    thumbnail: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765469448/Screenshot_2025-12-11_213951_gxek65.png", 
+    duration: "3:01", 
+    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765469414/VN20251211_212550_dexnr8.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
+  },
   // Add more video objects here
 ];
 
