@@ -1,6 +1,6 @@
 // client/src/pages/LandingPage.jsx
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react'; // <--- MODIFIED: Added useRef
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -88,6 +88,7 @@ const PlayButton = styled(motion.button)`
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(255, 51, 102, 0.6);
+  z-index: 10; /* Ensure button is on top */
 
   &:hover {
     background-color: #e6004c;
@@ -95,9 +96,27 @@ const PlayButton = styled(motion.button)`
   }
 `;
 
+// NEW: Button to start/pause the trailer
+const TrailerPlayButton = styled(PlayButton)`
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    margin-right: 15px;
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    box-shadow: none;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: scale(1.02);
+    }
+`;
+
 // --- REACT COMPONENT ---
 export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false); // <--- NEW STATE
+  const trailerRef = useRef(null); // <--- NEW REF
   const navigate = useNavigate();
 
   const handleLoadingComplete = () => {
@@ -107,6 +126,22 @@ export default function LandingPage() {
   const handlePlayClick = () => {
     navigate('/episodes');
   }
+
+  // NEW: Function to toggle the trailer playback
+  const toggleTrailerPlayback = () => {
+    if (trailerRef.current) {
+        if (isPlaying) {
+            trailerRef.current.pause();
+        } else {
+            // Attempt to play, catching errors if autoplay is blocked
+            trailerRef.current.play().catch(error => {
+                console.error("Autoplay failed:", error);
+            });
+        }
+        setIsPlaying(!isPlaying);
+    }
+  };
+
 
   const contentVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -122,7 +157,7 @@ export default function LandingPage() {
   };
 
   // WARNING: This link must be the direct MP4/WebM URL from Cloudinary, not the /embed/ link.
-  const TRAILER_URL = "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765469414/VN20251211_212550_dexnr8.mp4";
+  const TRAILER_URL = "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765469414/VN20251211_212550_dexnr8.mp4"; 
 
   return (
     <>
@@ -138,12 +173,13 @@ export default function LandingPage() {
         >
           {/* ADDED: Render the Video Player in the background */}
           <BackgroundVideoPlayer
+              ref={trailerRef} // <--- ADDED REF
               src={TRAILER_URL}
               title="Birthday Trailer"
-              controls={false} /* Hidden controls for cinematic look */
+              controls={false} 
               loop={true}
-              autoPlay={true}
-              muted={false} /* REQUESTED: No mute, but risks blocking autoplay */
+              // REMOVED autoPlay={true} so playback starts on button click
+              muted={false} 
           />
 
           <ContentBox variants={contentVariants}>
@@ -155,17 +191,33 @@ export default function LandingPage() {
               <br/>
               A special presentation for your birthday.
             </Description>
-            <PlayButton
-              onClick={handlePlayClick}
-              variants={{
-                hidden: { opacity: 0, scale: 0.8 },
-                visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 20 } }
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              ▶️ PLAY EPISODES
-            </PlayButton>
+            <div> {/* Button Container */}
+                {/* NEW: Button to control the background trailer */}
+                <TrailerPlayButton
+                    onClick={toggleTrailerPlayback}
+                    variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 20, delay: 0.6 } }
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    {isPlaying ? "⏸️ PAUSE TRAILER" : "▶️ PLAY TRAILER"}
+                </TrailerPlayButton>
+                
+                {/* Existing button to enter episodes list */}
+                <PlayButton
+                    onClick={handlePlayClick}
+                    variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 20, delay: 0.8 } }
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    PLAY EPISODES
+                </PlayButton>
+            </div>
           </ContentBox>
         </HeroContainer>
       )}
