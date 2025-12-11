@@ -13,23 +13,23 @@ const videoData = [
     friend: "Pragati Tripathi", 
     thumbnail: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765400987/Episode-1_canuyi.png", 
     duration: "4:23",
-    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765401781/VN20251211_024735_bi5zet.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
+    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765441740/VN20251211_030023_db7ohl.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
   },
   { 
     id: 2, 
-    title: "Season 1, Ep 2: Sour Prom", 
-    friend: "Friend B", 
-    thumbnail: "/images/ep2.jpg", 
+    title: "Season 1, Ep 2: The Sarcasm Master", 
+    friend: "Arti Sharma", 
+    thumbnail: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765442246/Screenshot_2025-12-11_140701_y514ri.png", 
     duration: "1:45",
-    videoUrl: "YOUR_DIRECT_MP4_LINK_FOR_EP2" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
+    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765441751/VN20251211_132813_gs3on2.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
   },
   { 
     id: 3, 
-    title: "The Next Era: The Tribute", 
-    friend: "Mom/Family", 
-    thumbnail: "/images/ep3.jpg", 
+    title: "Season 1, Ep3 : The Y", 
+    friend: "Yours Truly", 
+    thumbnail: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765442535/Screenshot_2025-12-11_141158_ncmjby.png", 
     duration: "3:01", 
-    videoUrl: "YOUR_DIRECT_MP4_LINK_FOR_EP3" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
+    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765442692/VN20251211_135428_hb10sm.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
   },
   // Add more video objects here
 ];
