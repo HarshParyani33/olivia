@@ -89,7 +89,7 @@ export default function Header() {
       transition={{ type: "spring", stiffness: 120, delay: 0.1 }}
     >
       <Logo to="/home">
-        PROTOCOL OLIVIA
+        PROTOCOL Kitkat
       </Logo>
       <NavLinks>
         {navLinks.map((link) => (

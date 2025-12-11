@@ -4,18 +4,18 @@ import { motion } from 'framer-motion';
 
 // --- DATA SIMULATION ---
 const profileData = {
-  stageName: "Protocol Olivia",
+  stageName: "Badass Ishiee",
   era: "The Eternal Sophomore",
-  birthDate: "Sept 12",
-  position: "Vocalist, Visual, Main Character",
+  birthDate: "Dec 12",
+  position: "Dancer, Main Character, Mood Maker, cutiee",
   favoriteTrack: "Driver's License (Remix)",
-  photo: "/WIN_20240313_14_31_39_Pro.jpg", // Placeholder photo
+  photo: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415111/profile_xgrf5t.jpg", // Placeholder photo
   stats: {
-    Cuteness: 99,
-    Sass: 95,
-    Dancing: 60,
+    Cuteness: 97,
+    Sass: 100,
+    Dancing: 80,
     Melodrama: 90,
-    Songwriting: 75,
+    Funny: 90,
   },
 };
 
@@ -172,7 +172,7 @@ const statColors = {
     Sass: '#ff69b4',     // Medium Pink
     Dancing: '#8a2be2',  // Blue Violet
     Melodrama: '#ffd700', // Gold
-    Songwriting: '#00ffff', // Cyan (A contrasting color)
+    Funny: '#00ffff', // Cyan (A contrasting color)
 };
 
 // Function to calculate the conic gradient string for the pie chart

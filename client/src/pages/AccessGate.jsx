@@ -142,7 +142,7 @@ export default function AccessGate({ setAuthenticated }) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 120 }}
       >
-        PROTOCOL OLIVIA ACCESS
+        PROTOCOL KITKAT ACCESS
       </Title>
 
       <Form onSubmit={handleSubmit}>

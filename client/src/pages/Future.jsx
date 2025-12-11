@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 // --- DATA SIMULATION (Goals for the upcoming year) ---
 const newSeasonGoals = [
   "Mastering a challenging new skill (Level Up!).",
+  "Make Projects that are as Creative as you",
   "Traveling somewhere completely unexpected.",
-  "Deepening creative projects and finding new inspiration.",
+  "Continue exploring new creative horizons.",
+  "Make time for the long lost hobbies you love.",
   "Prioritizing self-care and finding inner peace.",
   "Facing a fear head-on.",
 ];

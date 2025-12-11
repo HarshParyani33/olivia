@@ -4,21 +4,58 @@ import React, { useState, useRef, useEffect } from 'react'; // UPDATED: Added us
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 
-// --- DATA SIMULATION ---
+// --- DATA SIMULATION (UPDATED with unique vinylMessages) ---
 const timelineTracks = [
   { 
-    year: '2016', 
+    year: '2003', 
     title: 'Track 1: Beginning of the Era', 
-    story: "The year the story really began. New city, new vibes.", 
-    // YOUR CLOUDINARY LINK (Using /video/upload is correct for audio on Cloudinary)
+    story: "The year the story really began. The birth of the superstar.", 
+    // Cloudinary URL - REPLACE THIS FOR TRACKS 2-6
     song: 'https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765394973/Finding_Her_Kushagra_128_Kbps_kqgsom.mp3', 
-    rotation: 0 
+    rotation: 0,
+    vinylMessage: "2003: The year the needle dropped on the rest of your life. This track is all about discovering the rhythm. You may not realize it yet, but your presence lights up every room. Keep shining! I am so glad you were born and we get to share this journey together." 
   },
-  { year: '2018', title: 'Track 2: First Big Win', story: "A major accomplishment that set the bar high.", song: 'YOUR_CLOUDINARY_MP3_LINK_2', rotation: 45 },
-  { year: '2020', title: 'Track 3: The Golden Age', story: "The best summer/period, full of joy and sunshine.", song: 'YOUR_CLOUDINARY_MP3_LINK_3', rotation: 90 },
-  { year: '2022', title: 'Track 4: Late Night Talks', story: "The era of deep friendships and emotional growth.", song: 'YOUR_CLOUDINARY_MP3_LINK_4', rotation: 135 },
-  { year: '2024', title: 'Track 5: Sour to Sweet', story: "Overcoming challenges and finding inner peace.", song: 'YOUR_CLOUDINARY_MP3_LINK_5', rotation: 180 },
-  { year: '2025', title: 'Bonus Track: Here and Now', story: "Celebrating the amazing person you are today!", song: 'YOUR_CLOUDINARY_MP3_LINK_6', rotation: 270 },
+  { 
+    year: '2013', 
+    title: 'Track 2: Years that shaped me', 
+    story: "The transformative years filled with growth and self-discovery.", 
+    song: 'https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765413199/Lamhey__Anubha_Bajaj_Trending_Song_2023_Official_Video_wamco8.mp3', 
+    rotation: 45,
+    vinylMessage: "2013: Growth is messy. This record holds the sound of overcoming obstacles and proving your worth. Remember, every challenge you faced only made you stronger and more radiant. Keep believing in your magic! These are the years that defined your sparkle that define you and your inner strength today. Always remember that." 
+  },
+  { 
+    year: '2018', 
+    title: 'Track 3: The Preparation', 
+    story: "The build-up to something amazing.", 
+    song: 'https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765413400/Kho_Gaye_Hum_Kahan_-Full_Video_Baar_Baar_Dekho_Sidharth_Malhotra_Katrina_K_Jasleen_R_Prateek_K_tzna7f.mp3', 
+    rotation: 90,
+    vinylMessage: "2018: Sunshine and high energy. These were the year of preparation, preparation to step in the real world. Keep those lessons life taught you close to your heart as you continue to chase your dreams. You are destined for greatness! You are never gonna be alone ever again!" 
+  },
+  { 
+    year: '2023', 
+    title: 'Track 4: The New Life', 
+    story: "The era of new beginnings and fresh starts.", 
+    song: 'https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765414057/Prateek_Kuhad_-_Kasoor_Official_Music_Video_dzvemn.mp3', 
+    rotation: 135,
+    vinylMessage: "2023: A year of new beginnings. This track celebrates your courage to embrace change and start a new college journey. Remember, every ending is just a new beginning in disguise. Keep moving forward with confidence and grace! If you can handle living in a place where you know no one, you can handle anything life throws at you. The phase where you made strangers your best friends and much more. The phase that made your inner personality come through!" 
+  },
+  { 
+    year: '2024', 
+    title: 'Track 5: The Golden Age', 
+    story: "The era of deep friendships and emotional growth.", 
+    song: 'https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765414485/Maroon_5_-_Memories_Official_Video_wdrfo7.mp3', 
+    rotation: 180,
+    vinylMessage: "2024: The golden age of friendships. This track is a tribute to the incredible friends you've made and the unforgettable memories you've created together. Cherish these bonds, for they are the true treasures of life. Keep nurturing these relationships and let your heart lead the way! This era is all about finding your tribe and loving them hard. The friends who became family and made every moment unforgettable." 
+  },
+  { 
+    year: '2025', 
+    title: 'Bonus Track: Here and Now', 
+    story: "Overcoming challenges and finding inner peace.", 
+    song: 'https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765414715/Kahaani_j5qhgj.mp3', 
+    rotation: 270,
+    // FINAL CATCH-ALL MESSAGE: A personal one from the producer (you!)
+    vinylMessage: "Every track here marks a milestone, but the track of your life is my favorite album. Keep spinning, superstar! This is the era you have to shine in front of this world and show them what you are made of. You are unstoppable, unbreakable, and undeniably you. Keep being the incredible person you are, and never forget how much you are loved by your family,me and your always and forever." 
+  },
 ];
 
 // --- KEYFRAMES ---
@@ -261,7 +298,10 @@ export default function Timeline() {
   }, [activeTrack]);
 
   const handleCenterClick = () => {
-    setShowModal(true);
+    // Only show the message if a track is actively selected
+    if (activeTrack.vinylMessage) { 
+        setShowModal(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -272,8 +312,6 @@ export default function Timeline() {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
-
-  const vinylMessage = "Every track here marks a milestone, but the track of your life is my favorite album. Keep spinning, superstar!";
 
   return (
     <TimelineContainer
@@ -338,9 +376,8 @@ export default function Timeline() {
         {activeTrack.song && (
             <AudioPlayer 
                 ref={audioRef} 
-                // Removed 'controls' attribute to hide the player
                 key={activeTrack.song}
-                autoPlay={false} // Autoplay is handled by the useEffect logic
+                autoPlay={false} 
             >
                 <source src={activeTrack.song} type="audio/mpeg" />
                 Your browser does not support the audio element.
@@ -349,7 +386,7 @@ export default function Timeline() {
 
       </MilestoneList>
       
-      {/* Message Modal */}
+      {/* Message Modal (MODIFIED) */}
       {showModal && (
         <ModalOverlay
           initial={{ opacity: 0 }}
@@ -363,8 +400,10 @@ export default function Timeline() {
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 15 }}
           >
-            <ChartTitle>MESSAGE FROM THE PRODUCER</ChartTitle>
-            <ModalContent>{vinylMessage}</ModalContent>
+            {/* MODIFIED: Title dynamically changes based on the active year */}
+            <ChartTitle>MESSAGE FROM THE {activeTrack.year} ERA</ChartTitle>
+            {/* MODIFIED: Content uses the unique vinylMessage */}
+            <ModalContent>{activeTrack.vinylMessage}</ModalContent>
             <CloseButton 
                 onClick={handleCloseModal}
                 whileHover={{ scale: 1.1 }}

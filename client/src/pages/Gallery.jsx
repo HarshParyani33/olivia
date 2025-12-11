@@ -11,16 +11,24 @@ import CircularGallery from '../components/CircularGallery';
 // IMPORTANT: Use relative paths for images, and ensure they are placed in your public folder
 // Increased items to 10 for better loop consistency
 const galleryItems = [
-  { image: '/WIN_20240313_14_31_39_Pro.jpg', text: 'Sweet Memories' },
-  { image: '/images/polaroid-2.jpg', text: 'Road Trip Vibes' },
-  { image: '/images/polaroid-3.jpg', text: 'Sour Face Era' },
-  { image: '/images/polaroid-4.jpg', text: 'Late Night Talks' },
-  { image: '/images/polaroid-5.jpg', text: 'Hello Kitty Mood' },
-  { image: '/images/polaroid-6.jpg', text: 'Good 4 U' }, 
-  { image: '/images/polaroid-7.jpg', text: 'Deja Vu Moment' }, 
-  { image: '/images/polaroid-8.jpg', text: 'Fave Hoodie' },
-  { image: '/images/polaroid-9.jpg', text: 'Driving License' },
-  { image: '/images/polaroid-10.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765412337/Vogue_croq6g.jpg', text: 'Sweet Memories' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415111/profile_xgrf5t.jpg', text: 'Road Trip Vibes' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415230/20241019_162402_onofll.jpg', text: 'Sour Face Era' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415238/IMG-20250128-WA0007_f9dazw.jpg', text: 'Late Night Talks' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415641/20240924_174140_0_mdah4g.jpg', text: 'Hello Kitty Mood' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415257/20241214_201437_thyrag.jpg', text: 'Good 4 U' }, 
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415404/20241123_125544_ycyt4y.jpg', text: 'Deja Vu Moment' }, 
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415397/Screenshot_20241107_034151_Video_Player_ee6o7k.jpg', text: 'Fave Hoodie' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415396/IMG-20241019-WA0048_h0lfsn.jpg', text: 'Driving License' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415254/20241214_201446_ytywft.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415730/IMG-20240624-WA0054_zsjuzf.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415867/IMG-20240321-WA0020_ohyfje.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415877/20240309_131127_il38f2.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415764/IMG-20240624-WA0050_nknujd.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415879/IMG_4316_dr0tic.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415872/Snapchat-1299315500_ismtdk.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415984/IMG_20240225_114245_651_uvphcr.jpg', text: 'Happier' },
+  { image: 'https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765415986/IMG-20240225-WA0000_jvjlmt.jpg', text: 'Happier' },
 ];
 
 // --- STYLED COMPONENTS ---
@@ -75,7 +83,7 @@ export default function Gallery() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <GalleryTitle>// SOUR & SWEET: CONTRA-SCROLL GALLERY // </GalleryTitle>
+      <GalleryTitle>// SOUR & SWEET: GALLERY // </GalleryTitle>
       
       <GalleryCanvasWrapper>
         {/* The CircularGallery takes 100% width/height of its parent */}

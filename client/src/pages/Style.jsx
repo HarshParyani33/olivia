@@ -1,3 +1,5 @@
+// client/src/pages/Style.jsx
+
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
@@ -5,11 +7,11 @@ import { motion } from 'framer-motion';
 // --- DATA SIMULATION (Magazine Content) ---
 const magazineData = {
   coverTitle: "VOGUE",
-  issue: "SEPTEMBER 2025",
+  issue: "DECEMBER 2025",
   headline1: "THE UNSTOPPABLE: How She Became Her Own Main Character.",
   headline2: "BREAKING FREE: The Sour Sound That Defined a Generation.",
   featureStory: "Her most iconic looks, analyzed by the fashion elite.",
-  photo: "/WIN_20240313_14_31_39_Pro.jpg", // Placeholder photo
+  photo: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765412337/Vogue_croq6g.jpg", // Placeholder photo
   name: "Smriti Bisht",
 };
 
@@ -41,9 +43,10 @@ const VogueTitle = styled(motion.h1)`
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 `;
 
+// MODIFIED: Changed 'top: 150px' to 'bottom: 50px' to move the headlines to the bottom-left
 const HeadlineBlock = styled.div`
   position: absolute;
-  top: 150px;
+  bottom: 50px; 
   left: 10px;
   width: 250px;
   z-index: 10;
@@ -103,7 +106,8 @@ const MagazineFrame = styled.div`
     
     /* Move headlines down slightly if header is stacked */
     ${HeadlineBlock} {
-        top: 100px;
+        /* This is the mobile override for the HeadlineBlock */
+        bottom: 70px; /* Adjusted slightly higher for smaller screens */
         width: 80%;
     }
   }

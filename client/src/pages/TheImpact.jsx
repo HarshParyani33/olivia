@@ -9,11 +9,11 @@ import VideoPlayer from '../components/VideoPlayer'; // NEW: Import VideoPlayer
 const videoData = [
   { 
     id: 1, 
-    title: "Pilot Episode: The Arrival", 
-    friend: "Bestie A", 
-    thumbnail: "/images/ep1.jpg", 
-    duration: "2:15",
-    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765391899/WhatsApp_Video_2025-12-10_at_5.32.20_PM_fwlqmy.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
+    title: "Pilot Episode: The Bestie Era", 
+    friend: "Pragati Tripathi", 
+    thumbnail: "https://res.cloudinary.com/dd6a0rwbr/image/upload/v1765400987/Episode-1_canuyi.png", 
+    duration: "4:23",
+    videoUrl: "https://res.cloudinary.com/dd6a0rwbr/video/upload/v1765401781/VN20251211_024735_bi5zet.mp4" // 🚨 REPLACE THIS WITH YOUR VIDEO URL
   },
   { 
     id: 2, 
@@ -54,14 +54,15 @@ const ModalOverlay = styled(motion.div)`
 // Container for the VideoPlayer inside the modal
 const VideoModalContainer = styled(motion.div)`
   width: 90%;
-  max-width: 900px; /* MODIFIED: Reduced from 1200px to 900px */
+  max-width: 900px; 
+  /* NEW/MODIFIED: Ensure the height is limited relative to the screen size */
+  max-height: 90vh; /* Limit to 90% of viewport height */
+  
   background: var(--color-background);
   box-shadow: 0 0 50px var(--color-accent);
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  /* 🚨 CORRECTION: Removed unnecessary padding-bottom as the info box is an overlay */
-  /* padding-bottom: 70px; */ 
 `;
 
 const CloseButton = styled.button`
@@ -197,6 +198,22 @@ const CardFriend = styled.small`
   font-family: var(--font-secondary);
 `;
 
+const VideoWrapper = styled.div`
+  /* Standard cinematic aspect ratio (16:9). Puts the video in a box */
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio (9/16 * 100) */
+  
+  /* Ensure the VideoPlayer is positioned absolutely inside this wrapper */
+  & > video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 
 // --- REACT COMPONENT ---
 export default function TheImpact() {
@@ -264,14 +281,16 @@ export default function TheImpact() {
                 transition={{ type: "spring", stiffness: 100 }}
                 onClick={(e) => e.stopPropagation()} 
             >
-                {/* 1. Video Player */}
-                <VideoPlayer
-                    src={selectedEpisode.videoUrl}
-                    title={selectedEpisode.title} 
-                    controls={true}
-                    autoPlay={true}
-                    muted={false} 
-                />
+                {/* 1. Video Player is wrapped in the new VideoWrapper */}
+                <VideoWrapper>
+                    <VideoPlayer
+                        src={selectedEpisode.videoUrl}
+                        title={selectedEpisode.title} 
+                        controls={true}
+                        autoPlay={true}
+                        muted={false} 
+                    />
+                </VideoWrapper>
                 
                 {/* 2. Episode Info Box (Title in the bottom left) */}
                 <EpisodeInfoBox>
